@@ -65,12 +65,15 @@ public class OmsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         Context ctx = getContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+
     }
 
     @Override
@@ -125,6 +128,8 @@ public class OmsFragment extends Fragment {
         mListener = null;
     }
 
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -140,12 +145,18 @@ public class OmsFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+
+
     public void setCenter(double latitude, double longitude){
         IMapController mapController = map.getController();
         mapController.setZoom(9.5);
         GeoPoint newCenter = new GeoPoint(latitude, longitude);
         mapController.setCenter(newCenter);
-
-
+        //mapController.animateTo(newCenter);
     }
+
+
+
+
+
 }

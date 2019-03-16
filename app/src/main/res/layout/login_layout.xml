@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,6 +9,8 @@
         android:layout_height="wrap_content"
         android:text="@string/app_name"
         android:textSize="32dp"
+        android:textColor="@color/colorAccent"
+        android:fontFamily="@font/rubikblackitalic"
         android:layout_marginTop="40dp"
         android:textAlignment="center"
         />
@@ -24,6 +27,8 @@
         android:layout_height="wrap_content"
         android:text="@string/app_description"
         android:textSize="24dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:fontFamily="@font/rubikitalic"
         android:layout_marginTop="20dp"
         android:textAlignment="center"
         android:layout_marginLeft="20dp"
@@ -32,7 +37,8 @@
     <EditText
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:hint="Username"
+        android:hint="@string/email_label"
+        android:fontFamily="@font/rubikregular"
         android:inputType="textEmailAddress"
         android:gravity="center"
         android:layout_gravity="center"
@@ -43,8 +49,9 @@
     <EditText
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:hint="Password"
+        android:hint="@string/pass_label"
         android:inputType="textPassword"
+        android:fontFamily="@font/rubikregular"
         android:gravity="center"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
@@ -56,15 +63,18 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:text="@string/sign_in_button_label"
+        android:fontFamily="@font/rubikblack"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_marginTop="40dp"
-        style="@android:style/Widget.Button"
+        style="@android:style/Widget.Button.Toggle"
         android:layout_gravity="center"
         />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New user registration"
+        android:text="@string/su"
         android:textSize="18sp"
+        android:fontFamily="@font/rubikitalic"
         android:layout_marginTop="40dp"
         android:textAlignment="center"
         android:linksClickable="true"

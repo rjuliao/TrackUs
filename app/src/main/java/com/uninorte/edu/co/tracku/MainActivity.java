@@ -39,6 +39,9 @@ import com.uninorte.edu.co.tracku.database.entities.User;
 import com.uninorte.edu.co.tracku.networking.WebServiceManager;
 import com.uninorte.edu.co.tracku.networking.WebServiceManagerInterface;
 
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -247,6 +250,8 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -260,6 +265,7 @@ public class MainActivity extends AppCompatActivity
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.google_maps_control, omsFragment);
+
             fragmentTransaction.commit();
         }
 
@@ -350,7 +356,9 @@ public class MainActivity extends AppCompatActivity
                             new LatLng(latitude,longitude)));
         }
         if(omsFragment!=null)
+
             omsFragment.setCenter(latitude,longitude);
+
     }
 
     @Override
