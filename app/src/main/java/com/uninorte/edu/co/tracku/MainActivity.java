@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity
                 if (INSTANCE == null) {
                     INSTANCE= Room.databaseBuilder(context,
                             TrackUDatabaseManager.class, "database-OSM").
-                            allowMainThreadQueries().build();
+                            allowMainThreadQueries().fallbackToDestructiveMigration().build();
                 }
             }
         }
