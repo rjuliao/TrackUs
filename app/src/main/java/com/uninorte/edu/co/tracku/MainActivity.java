@@ -35,6 +35,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.uninorte.edu.co.tracku.com.uninorte.edu.co.tracku.gps.GPSManager;
 import com.uninorte.edu.co.tracku.com.uninorte.edu.co.tracku.gps.GPSManagerInterface;
 import com.uninorte.edu.co.tracku.database.core.TrackUDatabaseManager;
+import com.uninorte.edu.co.tracku.database.entities.GPSlocation;
 import com.uninorte.edu.co.tracku.database.entities.User;
 import com.uninorte.edu.co.tracku.networking.WebServiceManager;
 import com.uninorte.edu.co.tracku.networking.WebServiceManagerInterface;
@@ -44,6 +45,7 @@ import org.osmdroid.views.MapView;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -64,7 +66,7 @@ public class MainActivity extends AppCompatActivity
             synchronized (TrackUDatabaseManager.class) {
                 if (INSTANCE == null) {
                     INSTANCE= Room.databaseBuilder(context,
-                            TrackUDatabaseManager.class, "database-tracku").
+                            TrackUDatabaseManager.class, "database-OSM").
                             allowMainThreadQueries().build();
                 }
             }
@@ -94,6 +96,7 @@ public class MainActivity extends AppCompatActivity
             newUser.email=userName;
             newUser.passwordHash=md5(password);
             INSTANCE.userDao().insertUser(newUser);
+
         }catch (Exception error){
             Toast.makeText(this,error.getMessage(),Toast.LENGTH_LONG).show();
             return false;
@@ -338,12 +341,24 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Aquí recibimos la  ubicación del usuario
+     * @param latitude
+     * @param longitude
+     */
     @Override
     public void LocationReceived(double latitude, double longitude) {
         this.latitude=latitude;
         this.longitude=longitude;
         ((TextView)findViewById(R.id.latitude_value)).setText(latitude+"");
         ((TextView)findViewById(R.id.longitude_value)).setText(longitude+"");
+        GPSlocation LCT = new GPSlocation();
+        LCT.latitude = latitude;
+        LCT.longitude = longitude;
+        LCT.date = "10/10/1997";
+        LCT.hour = "05:05:05";
+        INSTANCE.locationDao().inserLocation(LCT);
+
         if(googleMap!=null){
             googleMap.clear();
             googleMap.
