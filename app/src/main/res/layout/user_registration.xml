@@ -32,7 +32,25 @@
         android:layout_marginRight="20dp"
         />
 
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/fname_label"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:id="@+id/reg_fname_value"
+        />
 
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/lname_label"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:id="@+id/reg_lname_value"
+        />
 
     <EditText
         android:layout_width="200dp"

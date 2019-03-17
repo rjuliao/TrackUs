@@ -18,14 +18,19 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
             @Override
             public void onClick(View view) {
                 Intent intentToBeCalled=new Intent();
+                String fname = ((EditText)findViewById(R.id.reg_fname_value)).getText()+"";
+                String lname = ((EditText)findViewById(R.id.reg_lname_value)).getText()+"";
                 String userName=((EditText)findViewById(R.id.reg_username_value)).getText()+"";
                 String password=((EditText)findViewById(R.id.reg_password_value)).getText()+"";
                 String passwordConfirmation=((EditText)findViewById(R.id.reg_password_confirmation_value)).getText()+"";
+
                 if(password.equals(passwordConfirmation)) {
                     intentToBeCalled.putExtra("callType", "userRegistration");
+                    intentToBeCalled.putExtra("fName",fname);
+                    intentToBeCalled.putExtra("lName",lname);
                     intentToBeCalled.putExtra("userName", userName);
                     intentToBeCalled.putExtra("password", password);
-                    intentToBeCalled.setClass(getApplicationContext(), MainActivity.class);
+                    intentToBeCalled.setClass(getApplicationContext(), OmsFragment.class);
                     startActivity(intentToBeCalled);
                 }
             }

@@ -14,6 +14,8 @@
     <string name="pass_label">Password</string>
     <string name="pass2_labe">Confirm Password</string>
     <string name="email_label">E-mail Address</string>
+    <string name="fname_label">First Name</string>
+    <string name="lname_label">Laste Name</string>
     <string name="gm_label">Google maps</string>
     <string name="osm_label">Open Street Maps</string>
     <string name="bt_center_map_description">Center map</string>
