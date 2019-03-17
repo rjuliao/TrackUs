@@ -16,7 +16,7 @@ public interface GpsDao {
     List<GPSlocation> getUserById(int id);
 
     @Insert
-    void inserLocation(GPSlocation loc);
+    void insertLocation(GPSlocation loc);
 
 
     @Delete

@@ -29,7 +29,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textSize="30dp"
         android:textColor="@color/colorAccent"
-        android:fontFamily="@font/rubikblackitalic"/>
+        />
 
 
 

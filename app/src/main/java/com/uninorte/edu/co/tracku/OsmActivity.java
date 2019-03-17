@@ -7,62 +7,54 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.clans.fab.FloatingActionButton;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.uninorte.edu.co.tracku.com.uninorte.edu.co.tracku.gps.GPSManager;
 import com.uninorte.edu.co.tracku.com.uninorte.edu.co.tracku.gps.GPSManagerInterface;
 import com.uninorte.edu.co.tracku.database.core.TrackUDatabaseManager;
 import com.uninorte.edu.co.tracku.database.entities.GPSlocation;
 import com.uninorte.edu.co.tracku.database.entities.User;
-import com.uninorte.edu.co.tracku.networking.WebServiceManager;
 import com.uninorte.edu.co.tracku.networking.WebServiceManagerInterface;
 
+import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        GPSManagerInterface, OnMapReadyCallback,
+import static com.uninorte.edu.co.tracku.MainActivity.getDatabase;
+
+public class OsmActivity extends AppCompatActivity
+        implements
+        GPSManagerInterface,
         OmsFragment.OnFragmentInteractionListener, WebServiceManagerInterface {
 
     Activity thisActivity=this;
     GPSManager gpsManager;
-    GoogleMap googleMap;
     double latitude;
     double longitude;
-    OmsFragment omsFragment;
-
     static TrackUDatabaseManager INSTANCE;
+    MapView map;
 
+    /**
+     * Iniciamos ROOM DB
+     * @param context
+     * @return
+     */
     static TrackUDatabaseManager getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (TrackUDatabaseManager.class) {
@@ -75,6 +67,7 @@ public class MainActivity extends AppCompatActivity
         }
         return INSTANCE;
     }
+
 
     public boolean userAuth(String userName,String password){
         try{
@@ -129,9 +122,10 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_osm);
         checkPermissions();
         getDatabase(this);
+
 
         String callType=getIntent().getStringExtra("callType");
         if(callType.equals("userLogin")) {
@@ -158,131 +152,34 @@ public class MainActivity extends AppCompatActivity
         }else{
             finish();
         }
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        SupportMapFragment supportMapFragment=(SupportMapFragment)
-                this.getSupportFragmentManager().findFragmentById(R.id.google_maps_control);
-        supportMapFragment.getMapAsync(this);
-
-        com.github.clans.fab.FloatingActionButton floatingActionButton1=
-                (com.github.clans.fab.FloatingActionButton)
-                        findViewById(R.id.zoom_in_button);
-        floatingActionButton1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(googleMap!=null){
-                    googleMap.moveCamera(CameraUpdateFactory.zoomIn());
-                }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(map==null) {
+            map = (MapView) findViewById(R.id.oms_map);
+            if (map != null) {
+                map.setTileSource(TileSourceFactory.MAPNIK);
+                map.onResume();
             }
-        });
-
-        com.github.clans.fab.FloatingActionButton floatingActionButton2=
-                (com.github.clans.fab.FloatingActionButton)
-                        findViewById(R.id.zoom_out_button);
-        floatingActionButton2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(googleMap!=null){
-                    googleMap.moveCamera(CameraUpdateFactory.zoomOut());
-                }
-            }
-        });
-
-        com.github.clans.fab.FloatingActionButton floatingActionButton3=
-                (com.github.clans.fab.FloatingActionButton)
-                        findViewById(R.id.focus_button);
-
-        floatingActionButton3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(googleMap!=null){
-                    googleMap.moveCamera(
-                            CameraUpdateFactory.newLatLng(
-                                    new LatLng(latitude,longitude)));
-                }
-            }
-        });
-
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        }else{
+            map.onResume();
         }
+        map.setBuiltInZoomControls(true);
+        map.setMultiTouchControls(true);
+        MyLocationNewOverlay myLocationNewOverlay=
+                new MyLocationNewOverlay(
+                        new GpsMyLocationProvider(this),map);
+        myLocationNewOverlay.enableMyLocation();
+        this.map.getOverlays().add(myLocationNewOverlay);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            WebServiceManager.CallWebServiceOperation(this,"http://172.17.5.228:8080/WebServiceREST/webresources",
-                    "maincontroller",
-                    "operation",
-                    "PUT",
-                    "This is a test",
-                    "Settings");
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.google_maps_fragment_opt) {
-            // Handle the camera action
-        } else if (id == R.id.osm_fragment_opt) {
-            this.omsFragment =  OmsFragment.newInstance("","");
-            android.support.v4.app.FragmentTransaction fragmentTransaction =
-                    getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.google_maps_control, omsFragment);
-
-            fragmentTransaction.commit();
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    /**
-     * Lista
-     */
     public void checkPermissions(){
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) !=
@@ -302,14 +199,14 @@ public class MainActivity extends AppCompatActivity
             builder.setTitle("Permissions granting");
             builder.setPositiveButton(R.string.accept,
                     new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    ActivityCompat.requestPermissions(thisActivity,
-                            new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                                    Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_EXTERNAL_STORAGE,
-                                    Manifest.permission.WRITE_EXTERNAL_STORAGE},1227);
-                }
-            });
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(thisActivity,
+                                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                                            Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_EXTERNAL_STORAGE,
+                                            Manifest.permission.WRITE_EXTERNAL_STORAGE},1227);
+                        }
+                    });
             AlertDialog dialog=builder.create();
             dialog.show();
             return;
@@ -318,7 +215,6 @@ public class MainActivity extends AppCompatActivity
             gpsManager.InitLocationManager();
         }
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -347,53 +243,29 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    /**
-     * Aquí recibimos la  ubicación del usuario
-     * @param latitude
-     * @param longitude
-     */
     @Override
-    public void LocationReceived(double latitude, double longitude) {
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void LocationReceived(double latitude, double longitued) {
         this.latitude=latitude;
-        this.longitude=longitude;
-        ((TextView)findViewById(R.id.latitude_value)).setText(latitude+"");
-        ((TextView)findViewById(R.id.longitude_value)).setText(longitude+"");
+        this.longitude=longitued;
+        ((TextView)findViewById(R.id.lat_val)).setText(latitude+"");
+        ((TextView)findViewById(R.id.lon_val)).setText(longitued+"");
         GPSlocation LCT = new GPSlocation();
         LCT.latitude = latitude;
-        LCT.longitude = longitude;
+        LCT.longitude = longitued;
         LCT.date = "10/10/1997";
         LCT.hour = "05:05:05";
         INSTANCE.locationDao().insertLocation(LCT);
 
-        if(googleMap!=null){
-            googleMap.clear();
-            googleMap.
-                    addMarker(new MarkerOptions().
-                            position(new LatLng(latitude,longitude))
-                            .title("you are here")
-                    );
-            googleMap.moveCamera(
-                    CameraUpdateFactory.newLatLng(
-                            new LatLng(latitude,longitude)));
-        }
-        if(omsFragment!=null)
-
-            omsFragment.setCenter(latitude,longitude);
-
+        this.setCenter(latitude,longitued);
     }
 
     @Override
     public void GPSManagerException(Exception error) {
-
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        this.googleMap=googleMap;
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
 
     }
 
@@ -405,5 +277,13 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(getApplication(),message,Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void setCenter(double latitude, double longitude){
+        IMapController mapController = map.getController();
+        mapController.setZoom(9.5);
+        GeoPoint newCenter = new GeoPoint(latitude, longitude);
+        mapController.setCenter(newCenter);
+        //mapController.animateTo(newCenter);
     }
 }

@@ -17,6 +17,8 @@
     <string name="gm_label">Google maps</string>
     <string name="osm_label">Open Street Maps</string>
     <string name="bt_center_map_description">Center map</string>
+    <string name="lat_v">LATITUDE: </string>
+    <string name="lon_v">LONGITUDE: </string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
