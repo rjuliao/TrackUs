@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TrackU</string>
-    <string name="app_description">This app helps to track U using Google Maps</string>
+    <string name="app_description">This app helps to track U using Open Street Maps</string>
     <string name="sign_in_button_label">Sign in</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -11,4 +11,15 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="accept">Accept</string>
+    <string name="su">Sing Up</string>
+    <string name="pass_label">Password</string>
+    <string name="pass2_labe">Confirm Password</string>
+    <string name="email_label">E-mail Address</string>
+    <string name="fname_label">First Name</string>
+    <string name="lname_label">Last Name</string>
+    <string name="gm_label">Google Maps</string>
+    <string name="osm_label">Open Street Maps</string>
+    <string name="bt_center_map_description">Center mal</string>
+    <string name="lat_v">"LATITUDE: "</string>
+    <string name="lon_v">LONGITUDE</string>
 </resources>

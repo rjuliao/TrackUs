@@ -30,7 +30,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
                     intentToBeCalled.putExtra("lName",lname);
                     intentToBeCalled.putExtra("userName", userName);
                     intentToBeCalled.putExtra("password", password);
-                    intentToBeCalled.setClass(getApplicationContext(), OmsFragment.class);
+                    intentToBeCalled.setClass(getApplicationContext(), OsmActivity.class);
                     startActivity(intentToBeCalled);
                 }
             }

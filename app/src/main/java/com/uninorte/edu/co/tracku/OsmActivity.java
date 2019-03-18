@@ -7,12 +7,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,11 +31,14 @@ import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import static com.uninorte.edu.co.tracku.MainActivity.getDatabase;
@@ -49,6 +54,7 @@ public class OsmActivity extends AppCompatActivity
     double longitude;
     static TrackUDatabaseManager INSTANCE;
     MapView map;
+    static User user;
 
     /**
      * Iniciamos ROOM DB
@@ -68,12 +74,19 @@ public class OsmActivity extends AppCompatActivity
         return INSTANCE;
     }
 
-
+    /**
+     * Obtengo la información del usuario
+     * @param userName
+     * @param password
+     * @return
+     */
     public boolean userAuth(String userName,String password){
         try{
             List<User> usersFound=getDatabase(this).userDao().getUserByEmail(userName);
             if(usersFound.size()>0){
                 if(usersFound.get(0).passwordHash.equals(md5(password))){
+                    user = new User();
+                    user = usersFound.get(0);
                     return true;
                 }
             }else{
@@ -85,12 +98,22 @@ public class OsmActivity extends AppCompatActivity
         return false;
     }
 
-    public boolean userRegistration(String userName,String password){
+    /**
+     * Guardo la información del usuario en Room
+     * @param fname
+     * @param lname
+     * @param userName
+     * @param password
+     * @return
+     */
+    public boolean userRegistration(String fname, String lname, String userName,String password){
         try{
-            User newUser=new User();
-            newUser.email=userName;
-            newUser.passwordHash=md5(password);
-            INSTANCE.userDao().insertUser(newUser);
+            user=new User();
+            user.fname = fname;
+            user.lname = lname;
+            user.email=userName;
+            user.passwordHash=md5(password);
+            INSTANCE.userDao().insertUser(user);
 
         }catch (Exception error){
             Toast.makeText(this,error.getMessage(),Toast.LENGTH_LONG).show();
@@ -135,42 +158,47 @@ public class OsmActivity extends AppCompatActivity
             if (!userAuth(userName, password)) {
                 Toast.makeText(this, "User not found!", Toast.LENGTH_LONG).show();
                 finish();
+            }else{
+                Toast.makeText(this, "Welcome! ", Toast.LENGTH_LONG).show();
             }
 
 
         }else if(callType.equals("userRegistration")) {
+            String fsname = getIntent().getStringExtra("fName");
+            String lsname = getIntent().getStringExtra("lName");
             String userName = getIntent().getStringExtra("userName");
             String password = getIntent().getStringExtra("password");
 
-            if (!userRegistration( userName, password)) {
+            if (!userRegistration(fsname, lsname, userName, password)) {
                 Toast.makeText(this, "Error while registering user!", Toast.LENGTH_LONG).show();
                 finish();
             }else{
                 Toast.makeText(this, "User registered!", Toast.LENGTH_LONG).show();
-                finish();
             }
         }else{
             finish();
         }
+
+
+        Context ctx = getApplicationContext();
+        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+        map = (MapView) findViewById(R.id.oms_map);
+        map.setTileSource(TileSourceFactory.MAPNIK);
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        map.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(map==null) {
-            map = (MapView) findViewById(R.id.oms_map);
-            if (map != null) {
-                map.setTileSource(TileSourceFactory.MAPNIK);
-                map.onResume();
-            }
-        }else{
-            map.onResume();
-        }
+
+        map.onResume();
+
         map.setBuiltInZoomControls(true);
         map.setMultiTouchControls(true);
         MyLocationNewOverlay myLocationNewOverlay=
@@ -249,19 +277,25 @@ public class OsmActivity extends AppCompatActivity
     }
 
     @Override
-    public void LocationReceived(double latitude, double longitued) {
-        this.latitude=latitude;
-        this.longitude=longitued;
-        ((TextView)findViewById(R.id.lat_val)).setText(latitude+"");
-        ((TextView)findViewById(R.id.lon_val)).setText(longitued+"");
+    public void LocationReceived(double latitude, double longitude) {
+
+        this.latitude = latitude;
+        this.longitude = longitude;
+        ((TextView)findViewById(R.id.lat_val)).setText(latitude +"");
+        ((TextView)findViewById(R.id.lon_val)).setText(longitude +"");
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat hourFormat = new SimpleDateFormat("hh:mm:ss");
+
         GPSlocation LCT = new GPSlocation();
+        LCT.userId = user.userId;
         LCT.latitude = latitude;
-        LCT.longitude = longitued;
-        LCT.date = "10/10/1997";
-        LCT.hour = "05:05:05";
+        LCT.longitude = longitude;
+        LCT.date = dateFormat.format(new Date());
+        LCT.hour = hourFormat.format(new Date());
         INSTANCE.locationDao().insertLocation(LCT);
 
-        this.setCenter(latitude,longitued);
+        this.setCenter(latitude,longitude);
     }
 
     @Override
@@ -279,11 +313,32 @@ public class OsmActivity extends AppCompatActivity
         });
     }
 
+
+    /**
+     * Centra la posición de una persona en el mapa
+     * @param latitude
+     * @param longitude
+     */
     public void setCenter(double latitude, double longitude){
         IMapController mapController = map.getController();
         mapController.setZoom(9.5);
         GeoPoint newCenter = new GeoPoint(latitude, longitude);
         mapController.setCenter(newCenter);
-        //mapController.animateTo(newCenter);
+
+        Marker startMarker = new Marker(map);
+        startMarker.setPosition(newCenter);
+        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        startMarker.setTitle("You are here "+ user.fname);
+        map.getOverlays().add(startMarker);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }
