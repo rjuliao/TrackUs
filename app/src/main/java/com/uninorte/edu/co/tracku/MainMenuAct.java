@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -32,14 +33,12 @@ import java.util.Date;
 import java.util.List;
 
 public class MainMenuAct extends AppCompatActivity
-        implements GPSManagerInterface, WebServiceManagerInterface,
-        OmsFragment.OnFragmentInteractionListener{
+        implements GPSManagerInterface, WebServiceManagerInterface {
 
-    Activity thisActivity=this;
+    Activity thisActivity = this;
     GPSManager gpsManager;
     double latitude;
     double longitude;
-    OmsFragment omsFragment;
 
     static TrackUDatabaseManager INSTANCE;
     static User user;
@@ -47,6 +46,7 @@ public class MainMenuAct extends AppCompatActivity
 
     /**
      * Iniciamos ROOM DB
+     *
      * @param context
      * @return
      */
@@ -54,7 +54,7 @@ public class MainMenuAct extends AppCompatActivity
         if (INSTANCE == null) {
             synchronized (TrackUDatabaseManager.class) {
                 if (INSTANCE == null) {
-                    INSTANCE= Room.databaseBuilder(context,
+                    INSTANCE = Room.databaseBuilder(context,
                             TrackUDatabaseManager.class, "database-OSM").
                             allowMainThreadQueries().fallbackToDestructiveMigration().build();
                 }
@@ -65,47 +65,49 @@ public class MainMenuAct extends AppCompatActivity
 
     /**
      * Obtengo la información del usuario
+     *
      * @param userName
      * @param password
      * @return
      */
-    public boolean userAuth(String userName,String password){
-        try{
-            List<User> usersFound=getDatabase(this).userDao().getUserByEmail(userName);
-            if(usersFound.size()>0){
-                if(usersFound.get(0).passwordHash.equals(md5(password))){
+    public boolean userAuth(String userName, String password) {
+        try {
+            List<User> usersFound = getDatabase(this).userDao().getUserByEmail(userName);
+            if (usersFound.size() > 0) {
+                if (usersFound.get(0).passwordHash.equals(md5(password))) {
                     user = new User();
                     user = usersFound.get(0);
                     return true;
                 }
-            }else{
+            } else {
                 return false;
             }
-        }catch (Exception error){
-            Toast.makeText(this,error.getMessage(),Toast.LENGTH_LONG).show();
+        } catch (Exception error) {
+            Toast.makeText(this, error.getMessage(), Toast.LENGTH_LONG).show();
         }
         return false;
     }
 
     /**
      * Guardo la información del usuario en Room
+     *
      * @param fname
      * @param lname
      * @param userName
      * @param password
      * @return
      */
-    public boolean userRegistration(String fname, String lname, String userName,String password){
-        try{
-            user=new User();
+    public boolean userRegistration(String fname, String lname, String userName, String password) {
+        try {
+            user = new User();
             user.fname = fname;
             user.lname = lname;
-            user.email=userName;
-            user.passwordHash=md5(password);
+            user.email = userName;
+            user.passwordHash = md5(password);
             INSTANCE.userDao().insertUser(user);
 
-        }catch (Exception error){
-            Toast.makeText(this,error.getMessage(),Toast.LENGTH_LONG).show();
+        } catch (Exception error) {
+            Toast.makeText(this, error.getMessage(), Toast.LENGTH_LONG).show();
             return false;
         }
         return true;
@@ -120,7 +122,7 @@ public class MainMenuAct extends AppCompatActivity
 
             // Create Hex String
             StringBuffer hexString = new StringBuffer();
-            for (int i=0; i<messageDigest.length; i++)
+            for (int i = 0; i < messageDigest.length; i++)
                 hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
             return hexString.toString();
 
@@ -129,7 +131,6 @@ public class MainMenuAct extends AppCompatActivity
         }
         return "";
     }
-
 
 
     @Override
@@ -141,21 +142,20 @@ public class MainMenuAct extends AppCompatActivity
         getDatabase(this);
 
 
-
-        String callType=getIntent().getStringExtra("callType");
-        if(callType.equals("userLogin")) {
+        String callType = getIntent().getStringExtra("callType");
+        if (callType.equals("userLogin")) {
             String userName = getIntent().getStringExtra("userName");
             String password = getIntent().getStringExtra("password");
 
             if (!userAuth(userName, password)) {
                 Toast.makeText(this, "User not found!", Toast.LENGTH_LONG).show();
                 finish();
-            }else{
+            } else {
                 Toast.makeText(this, "Welcome! ", Toast.LENGTH_LONG).show();
             }
 
 
-        }else if(callType.equals("userRegistration")) {
+        } else if (callType.equals("userRegistration")) {
             String fsname = getIntent().getStringExtra("fName");
             String lsname = getIntent().getStringExtra("lName");
             String userName = getIntent().getStringExtra("userName");
@@ -164,22 +164,24 @@ public class MainMenuAct extends AppCompatActivity
             if (!userRegistration(fsname, lsname, userName, password)) {
                 Toast.makeText(this, "Error while registering user!", Toast.LENGTH_LONG).show();
                 finish();
-            }else{
+            } else {
                 Toast.makeText(this, "User registered!", Toast.LENGTH_LONG).show();
             }
-        }else{
+        } else {
             finish();
         }
 
-        ((TextView)findViewById(R.id.menu_msg)).setText(
-                R.string.MM_msg +" "+ user.fname +
-                        " "+user.lname +"!");
+        ((TextView) findViewById(R.id.menu_msg)).setText(
+                "R.string.MM_msg" + " " + user.fname +
+                        " " + user.lname + "!");
 
 
     }
 
-
-    public void checkPermissions(){
+    /**
+     * Pedimos los permisos necesarios para la aplicación.
+     */
+    public void checkPermissions() {
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED
@@ -192,7 +194,7 @@ public class MainMenuAct extends AppCompatActivity
                 || ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            AlertDialog.Builder builder=new AlertDialog.Builder(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(
                     "We need the GPS location to track U and other permissions, please grant all the permissions...");
             builder.setTitle("Permissions granting");
@@ -202,15 +204,15 @@ public class MainMenuAct extends AppCompatActivity
                         public void onClick(DialogInterface dialog, int which) {
                             ActivityCompat.requestPermissions(thisActivity,
                                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                                            Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_EXTERNAL_STORAGE,
-                                            Manifest.permission.WRITE_EXTERNAL_STORAGE},1227);
+                                            Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_EXTERNAL_STORAGE,
+                                            Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1227);
                         }
                     });
-            AlertDialog dialog=builder.create();
+            AlertDialog dialog = builder.create();
             dialog.show();
             return;
-        }else{
-            this.gpsManager=new GPSManager(this,this);
+        } else {
+            this.gpsManager = new GPSManager(this, this);
             gpsManager.InitLocationManager();
         }
     }
@@ -228,28 +230,16 @@ public class MainMenuAct extends AppCompatActivity
 
     @Override
     public void LocationReceived(double latitude, double longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        SimpleDateFormat hourFormat = new SimpleDateFormat("hh:mm:ss");
-
-        GPSlocation LCT = new GPSlocation();
-        LCT.userId = user.userId;
-        LCT.latitude = latitude;
-        LCT.longitude = longitude;
-        LCT.date = dateFormat.format(new Date());
-        LCT.hour = hourFormat.format(new Date());
-        INSTANCE.locationDao().insertLocation(LCT);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode==1227){
-            if(grantResults[0]!=PackageManager.PERMISSION_GRANTED){
-                AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        if (requestCode == 1227) {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(
                         "The permissions weren't granted, then the app will be close");
                 builder.setTitle("Permissions granting");
@@ -260,10 +250,10 @@ public class MainMenuAct extends AppCompatActivity
                                 finish();
                             }
                         });
-                AlertDialog dialog=builder.create();
+                AlertDialog dialog = builder.create();
                 dialog.show();
-            }else{
-                this.gpsManager=new GPSManager(this,this);
+            } else {
+                this.gpsManager = new GPSManager(this, this);
                 gpsManager.InitLocationManager();
             }
         }
@@ -279,17 +269,23 @@ public class MainMenuAct extends AppCompatActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getApplication(),message,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplication(), message, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     public void pressMyLocation(View view) {
 
+        Intent intent = new Intent();
+        intent.setClass(getApplicationContext(), OsmActivity.class);
+        startActivity(intent);
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
 
+    public void pressToHistory(View view) {
+
+        Intent intent = new Intent();
+        intent.setClass(getApplicationContext(), HistoryLocation.class);
+        startActivity(intent);
     }
 }

@@ -45,100 +45,21 @@ import static com.uninorte.edu.co.tracku.MainActivity.getDatabase;
 
 public class OsmActivity extends AppCompatActivity
         implements
-        GPSManagerInterface,
-        OmsFragment.OnFragmentInteractionListener, WebServiceManagerInterface {
+        GPSManagerInterface, WebServiceManagerInterface {
 
     Activity thisActivity=this;
     GPSManager gpsManager;
     double latitude;
     double longitude;
-    static TrackUDatabaseManager INSTANCE;
+    //static TrackUDatabaseManager INSTANCE;
     MapView map;
-    static User user;
+    //static User user;
 
-    /**
-     * Iniciamos ROOM DB
-     * @param context
-     * @return
-     */
-    static TrackUDatabaseManager getDatabase(final Context context) {
-        if (INSTANCE == null) {
-            synchronized (TrackUDatabaseManager.class) {
-                if (INSTANCE == null) {
-                    INSTANCE= Room.databaseBuilder(context,
-                            TrackUDatabaseManager.class, "database-OSM").
-                            allowMainThreadQueries().fallbackToDestructiveMigration().build();
-                }
-            }
+    private void checkForDatabase(){
+        if (MainActivity.INSTANCE == null){
+            MainActivity.getDatabase(this);
         }
-        return INSTANCE;
-    }
 
-    /**
-     * Obtengo la información del usuario
-     * @param userName
-     * @param password
-     * @return
-     */
-    public boolean userAuth(String userName,String password){
-        try{
-            List<User> usersFound=getDatabase(this).userDao().getUserByEmail(userName);
-            if(usersFound.size()>0){
-                if(usersFound.get(0).passwordHash.equals(md5(password))){
-                    user = new User();
-                    user = usersFound.get(0);
-                    return true;
-                }
-            }else{
-                return false;
-            }
-        }catch (Exception error){
-            Toast.makeText(this,error.getMessage(),Toast.LENGTH_LONG).show();
-        }
-        return false;
-    }
-
-    /**
-     * Guardo la información del usuario en Room
-     * @param fname
-     * @param lname
-     * @param userName
-     * @param password
-     * @return
-     */
-    public boolean userRegistration(String fname, String lname, String userName,String password){
-        try{
-            user=new User();
-            user.fname = fname;
-            user.lname = lname;
-            user.email=userName;
-            user.passwordHash=md5(password);
-            INSTANCE.userDao().insertUser(user);
-
-        }catch (Exception error){
-            Toast.makeText(this,error.getMessage(),Toast.LENGTH_LONG).show();
-            return false;
-        }
-        return true;
-    }
-
-    public String md5(String s) {
-        try {
-            // Create MD5 Hash
-            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
-            digest.update(s.getBytes());
-            byte messageDigest[] = digest.digest();
-
-            // Create Hex String
-            StringBuffer hexString = new StringBuffer();
-            for (int i=0; i<messageDigest.length; i++)
-                hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
-            return hexString.toString();
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return "";
     }
 
     @Override
@@ -147,41 +68,12 @@ public class OsmActivity extends AppCompatActivity
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
         setContentView(R.layout.activity_osm);
         checkPermissions();
-        getDatabase(this);
-
-
-        String callType=getIntent().getStringExtra("callType");
-        if(callType.equals("userLogin")) {
-            String userName = getIntent().getStringExtra("userName");
-            String password = getIntent().getStringExtra("password");
-
-            if (!userAuth(userName, password)) {
-                Toast.makeText(this, "User not found!", Toast.LENGTH_LONG).show();
-                finish();
-            }else{
-                Toast.makeText(this, "Welcome! ", Toast.LENGTH_LONG).show();
-            }
-
-
-        }else if(callType.equals("userRegistration")) {
-            String fsname = getIntent().getStringExtra("fName");
-            String lsname = getIntent().getStringExtra("lName");
-            String userName = getIntent().getStringExtra("userName");
-            String password = getIntent().getStringExtra("password");
-
-            if (!userRegistration(fsname, lsname, userName, password)) {
-                Toast.makeText(this, "Error while registering user!", Toast.LENGTH_LONG).show();
-                finish();
-            }else{
-                Toast.makeText(this, "User registered!", Toast.LENGTH_LONG).show();
-            }
-        }else{
-            finish();
-        }
+        checkForDatabase();
 
 
         Context ctx = getApplicationContext();
-        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+        Configuration.getInstance().load(ctx,
+                PreferenceManager.getDefaultSharedPreferences(ctx));
         map = (MapView) findViewById(R.id.oms_map);
         map.setTileSource(TileSourceFactory.MAPNIK);
 
@@ -271,10 +163,7 @@ public class OsmActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
 
-    }
 
     @Override
     public void LocationReceived(double latitude, double longitude) {
@@ -288,12 +177,12 @@ public class OsmActivity extends AppCompatActivity
         SimpleDateFormat hourFormat = new SimpleDateFormat("hh:mm:ss");
 
         GPSlocation LCT = new GPSlocation();
-        LCT.userId = user.userId;
+        LCT.userId = MainMenuAct.user.userId;
         LCT.latitude = latitude;
         LCT.longitude = longitude;
         LCT.date = dateFormat.format(new Date());
         LCT.hour = hourFormat.format(new Date());
-        INSTANCE.locationDao().insertLocation(LCT);
+        MainMenuAct.INSTANCE.locationDao().insertLocation(LCT);
 
         this.setCenter(latitude,longitude);
     }
@@ -328,7 +217,7 @@ public class OsmActivity extends AppCompatActivity
         Marker startMarker = new Marker(map);
         startMarker.setPosition(newCenter);
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        startMarker.setTitle("You are here "+ user.fname);
+        startMarker.setTitle("You are here "+ MainMenuAct.user.fname);
         map.getOverlays().add(startMarker);
     }
 

@@ -24,6 +24,7 @@
     <string name="MM_b1">Your Location</string>
     <string name="MM_b2">History</string>
     <string name="MM_msg">Welcome</string>
+    <string name="back_b_inf">BACK</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 </resources>

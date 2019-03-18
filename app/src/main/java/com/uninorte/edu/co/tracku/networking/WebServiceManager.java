@@ -6,7 +6,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class WebServiceManager {
+public class
+WebServiceManager {
 
     public static void CallWebServiceOperation(final WebServiceManagerInterface  caller,
                                                final String  webServiceURL,

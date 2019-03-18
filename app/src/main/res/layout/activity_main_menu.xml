@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/menu_msg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:text="@string/MM_msg"
         android:textColor="@color/colorAccent"
         android:textSize="50dp"
@@ -36,7 +36,8 @@
         android:text="@string/MM_b2"
         android:layout_below="@id/yl_btn"
         style="@android:style/Widget.Button.Toggle"
-        android:textColor="@color/colorPrimaryDark"/>
+        android:textColor="@color/colorPrimaryDark"
+        android:onClick="pressToHistory"/>
 
 
 
