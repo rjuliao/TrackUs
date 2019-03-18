@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".MainMenuAct"></activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -37,7 +37,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegistrationActivity" />
-        <activity android:name=".OsmActivity"></activity>
+        <activity android:name=".OsmActivity" />
     </application>
 
 </manifest>

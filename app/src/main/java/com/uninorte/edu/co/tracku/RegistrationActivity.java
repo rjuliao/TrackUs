@@ -13,7 +13,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_registration);
-
+        
         findViewById(R.id.reg_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -30,7 +30,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
                     intentToBeCalled.putExtra("lName",lname);
                     intentToBeCalled.putExtra("userName", userName);
                     intentToBeCalled.putExtra("password", password);
-                    intentToBeCalled.setClass(getApplicationContext(), OsmActivity.class);
+                    intentToBeCalled.setClass(getApplicationContext(), MainMenuAct.class);
                     startActivity(intentToBeCalled);
                 }
             }

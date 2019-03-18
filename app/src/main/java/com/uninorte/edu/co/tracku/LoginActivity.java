@@ -50,7 +50,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             intentToBeCalled.putExtra("callType", "userLogin");
             intentToBeCalled.putExtra("userName",userName);
             intentToBeCalled.putExtra("password",password);
-            intentToBeCalled.setClass(this,OsmActivity.class);
+            intentToBeCalled.setClass(this, MainMenuAct.class);
             startActivity(intentToBeCalled);
         }
 
