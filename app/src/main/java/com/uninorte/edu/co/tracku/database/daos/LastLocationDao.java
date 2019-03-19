@@ -13,7 +13,7 @@ import java.util.List;
 @Dao
 public interface LastLocationDao {
 
-    @Query("SELECT * FROM LastLocation WHERE `User ID` = :userId")
+    @Query("SELECT * FROM LastLocation WHERE UserID = :userId")
     List<LastLocation> getUserLastLocation(int userId);
 
 
@@ -21,5 +21,5 @@ public interface LastLocationDao {
     void insertLocation(LastLocation lloc);
 
     @Delete
-    void deleteLocation();
+    void deleteLocation(LastLocation lloc);
 }

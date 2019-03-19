@@ -34,6 +34,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onStop() {
         super.onStop();
+        ((EditText)findViewById(R.id.login_username_value)).setText("");
+        ((EditText)findViewById(R.id.login_password_value)).setText("");
     }
 
     @Override

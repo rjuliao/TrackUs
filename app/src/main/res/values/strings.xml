@@ -31,7 +31,7 @@
     <string name="dh_btn">Go to find by date or Hour</string>
     <string name="live_tv">Live Locations</string>
     <string name="live_msg">Go to Live</string>
-
+    <string name="no_dh_msg">Please, choose a date and/or hour</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 </resources>

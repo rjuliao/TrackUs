@@ -244,12 +244,20 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            /** ESTO DA ERROR
+             * error: method CallWebServiceOperation in class WebServiceManager cannot be applied to given types;
+             * required: WebServiceManagerInterface,String,String,String,String
+             * found: MainActivity,String,String,String,String,String,String
+             * reason: actual and formal argument lists differ in length
+             *
+             *
             WebServiceManager.CallWebServiceOperation(this,"http://172.17.5.228:8080/WebServiceREST/webresources",
                     "maincontroller",
                     "operation",
                     "PUT",
                     "This is a test",
                     "Settings");
+             */
             return true;
         }
 

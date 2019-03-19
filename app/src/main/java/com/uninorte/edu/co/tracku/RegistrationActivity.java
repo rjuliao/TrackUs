@@ -53,6 +53,11 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
     @Override
     protected void onResume() {
         super.onResume();
+        ((EditText)findViewById(R.id.reg_fname_value)).setText("");
+        ((EditText)findViewById(R.id.reg_lname_value)).setText("");
+        ((EditText)findViewById(R.id.reg_username_value)).setText("");
+        ((EditText)findViewById(R.id.reg_password_value)).setText("");
+        ((EditText)findViewById(R.id.reg_password_confirmation_value)).setText("");
     }
 
     @Override

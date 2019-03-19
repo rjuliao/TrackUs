@@ -12,6 +12,8 @@ import java.util.List;
 @Dao
 public interface GpsDao {
 
+
+
     @Query("select * from gpslocation where UserId =:id")
     List<GPSlocation> getUserById(int id);
 

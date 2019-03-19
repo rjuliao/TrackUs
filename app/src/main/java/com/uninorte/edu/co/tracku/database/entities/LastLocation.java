@@ -11,13 +11,13 @@ public class LastLocation {
     @PrimaryKey(autoGenerate = true)
     public int idLl;
 
-    @ColumnInfo(name = "User ID")
+    @ColumnInfo(name = "UserID")
     public int userId;
 
-    @ColumnInfo(name = "Last Latitude")
+    @ColumnInfo(name = "LastLatitude")
     public double lastLatitude;
 
-    @ColumnInfo(name = "Last Longitude")
+    @ColumnInfo(name = "LastLongitude")
     public double lastLongitude;
 
     @ColumnInfo(name = "Active")

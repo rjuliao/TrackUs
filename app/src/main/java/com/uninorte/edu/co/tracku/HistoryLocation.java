@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.uninorte.edu.co.tracku.database.entities.User;
 
@@ -102,11 +103,48 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
                 //Inicio la actividad con las ubicaciones de todos los usarios en vivo
                 break;
             case R.id.dh_btn_q:
-                //Inicio la actividad que muestras las ubicaciones según un query
+                provideDateHour();
                 break;
         }
     }
 
+    /**
+     * Comienzo una nueva actividad donde paso una fecha y/o
+     * una hora para buscar personas en ese momento
+     *
+     */
+    private void provideDateHour(){
+        String dt = etDate.getText()+"";
+        String hr = etHour.getText()+"";
+        Intent dh_act = new Intent();
+
+        //Si fecha y hora son nulos entonces muestra un mensaje de error
+        if (dt == null && hr == null ){
+            Toast.makeText(this,R.string.no_dh_msg,Toast.LENGTH_LONG).show();
+
+            //Se escoge fecha, pero no una hora
+        }else if (dt != null && hr == null){
+            dh_act.putExtra("Date_no_Hour", dt);
+            Toast.makeText(this,dt,Toast.LENGTH_LONG).show();
+
+            //Se escoge hora, pero no fecha
+        }else  if(dt == null && hr != null){
+            dh_act.putExtra("Hour_no_Date",hr);
+            Toast.makeText(this,hr,Toast.LENGTH_LONG).show();
+
+            //Se escoge fecha y hora
+        }else{
+
+            dh_act.putExtra("Hour_d",dt);
+            dh_act.putExtra("Date_d",hr);
+            Toast.makeText(this,dt + " " + hr,Toast.LENGTH_LONG).show();
+        }
+        //dh_act.setClass(getApplicationContext(), );
+        //startActivity(dh_act);
+    }
+    /**
+     * Obtengo una fecha
+     */
     private void getDate(){
         DatePickerDialog recogerFecha = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -125,6 +163,9 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    /**
+     * Obtengo una hora
+     */
     private void getHour(){
         TimePickerDialog recogerHora = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
