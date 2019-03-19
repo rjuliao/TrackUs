@@ -6,13 +6,10 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class
-WebServiceManager {
+public class WebServiceManager {
 
     public static void CallWebServiceOperation(final WebServiceManagerInterface  caller,
                                                final String  webServiceURL,
-                                               final String resourceName,
-                                               final String operation,
                                                final String methodType,
                                                final String payload,
                                                final String userState){
@@ -21,7 +18,7 @@ WebServiceManager {
             @Override
             public void run() {
                 try{
-                    URL url=new URL(webServiceURL+"/"+resourceName+"/"+operation);
+                    URL url=new URL(webServiceURL);
                     HttpURLConnection httpURLConnection= (HttpURLConnection)url.openConnection();
                     httpURLConnection.setDoOutput(true);
                     httpURLConnection.setRequestMethod(methodType);
@@ -35,6 +32,8 @@ WebServiceManager {
                             stringBuffer.append((char)charIn);
                         }
                         caller.WebServiceMessageReceived(userState,stringBuffer.toString());
+                    }else{
+                        //local :v
                     }
 
                 }catch (Exception error){
