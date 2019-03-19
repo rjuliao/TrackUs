@@ -25,6 +25,9 @@
     <string name="MM_b2">History</string>
     <string name="MM_msg">Welcome</string>
     <string name="back_b_inf">BACK</string>
+    <string name="title_pickers">Get location by Date or Hour</string>
+    <string name="format_date">dd/mm/yyyy</string>
+    <string name="format_hour">hh:mm</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 </resources>

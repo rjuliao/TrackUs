@@ -172,7 +172,7 @@ public class MainMenuAct extends AppCompatActivity
         }
 
         ((TextView) findViewById(R.id.menu_msg)).setText(
-                "R.string.MM_msg" + " " + user.fname +
+                "Welcome" + " " + user.fname +
                         " " + user.lname + "!");
 
 
