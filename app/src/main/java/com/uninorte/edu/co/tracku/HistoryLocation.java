@@ -2,6 +2,7 @@ package com.uninorte.edu.co.tracku;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -79,6 +80,11 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
     }
@@ -91,6 +97,12 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.ib_get_hour:
                 getHour();
+                break;
+            case R.id.live_btn:
+                //Inicio la actividad con las ubicaciones de todos los usarios en vivo
+                break;
+            case R.id.dh_btn_q:
+                //Inicio la actividad que muestras las ubicaciones según un query
                 break;
         }
     }

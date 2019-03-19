@@ -101,21 +101,4 @@
         android:layout_below="@+id/tview"
         android:layout_margin="15dp"/>
 
-    <View
-        android:id="@+id/line1"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorPrimaryDark"
-        android:layout_below="@+id/live_btn"
-        android:layout_margin="15dp"
-        ></View>
-
-    <Button
-        android:id="@+id/back_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/back_b_inf"
-        android:textColor="@color/colorPrimaryDark"
-        android:layout_below="@+id/line1"
-        android:layout_margin="15dp"/>
 </RelativeLayout >
