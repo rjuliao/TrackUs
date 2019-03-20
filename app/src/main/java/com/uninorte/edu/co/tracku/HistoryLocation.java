@@ -124,23 +124,21 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
 
             //Se escoge fecha, pero no una hora
         }else if (dt != null && hr == null){
-            dh_act.putExtra("Date_no_Hour", dt);
+            dh_act.putExtra("callType", "Date_no_Hour");
+            dh_act.putExtra("Date", dt);
             Toast.makeText(this,dt,Toast.LENGTH_LONG).show();
+            dh_act.setClass(getApplicationContext(),DateHourLoc.class);
+            startActivity(dh_act);
 
             //Se escoge hora, pero no fecha
         }else  if(dt == null && hr != null){
-            dh_act.putExtra("Hour_no_Date",hr);
+            dh_act.putExtra("callType", "Hour_no_Date");
+            dh_act.putExtra("Hour",hr);
             Toast.makeText(this,hr,Toast.LENGTH_LONG).show();
-
-            //Se escoge fecha y hora
-        }else{
-
-            dh_act.putExtra("Hour_d",dt);
-            dh_act.putExtra("Date_d",hr);
-            Toast.makeText(this,dt + " " + hr,Toast.LENGTH_LONG).show();
+            dh_act.setClass(getApplicationContext(),DateHourLoc.class);
+            startActivity(dh_act);
         }
-        //dh_act.setClass(getApplicationContext(), );
-        //startActivity(dh_act);
+
     }
     /**
      * Obtengo una fecha

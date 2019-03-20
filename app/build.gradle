@@ -53,5 +53,6 @@ dependencies {
     // For Kotlin use lifecycle-reactivestreams-ktx
     testImplementation "androidx.arch.core:core-testing:$lifecycle_version"
     annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
+    implementation 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
 
 }

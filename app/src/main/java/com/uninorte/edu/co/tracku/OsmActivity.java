@@ -173,8 +173,8 @@ public class OsmActivity extends AppCompatActivity
         ((TextView)findViewById(R.id.lat_val)).setText(latitude +"");
         ((TextView)findViewById(R.id.lon_val)).setText(longitude +"");
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        SimpleDateFormat hourFormat = new SimpleDateFormat("hh:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat hourFormat = new SimpleDateFormat("hh:mm");
 
         GPSlocation LCT = new GPSlocation();
         LCT.userId = MainMenuAct.user.userId;

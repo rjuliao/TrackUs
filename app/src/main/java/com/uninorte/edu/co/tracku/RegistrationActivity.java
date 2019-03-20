@@ -2,13 +2,23 @@ package com.uninorte.edu.co.tracku;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.uninorte.edu.co.tracku.networking.WebServiceManager;
 import com.uninorte.edu.co.tracku.networking.WebServiceManagerInterface;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
 import java.io.BufferedWriter;
 import java.io.InputStream;
@@ -44,6 +54,8 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
                     intentToBeCalled.setClass(getApplicationContext(), MainMenuAct.class);
                     startActivity(intentToBeCalled);
                 }
+                consumirServicio r= new consumirServicio();
+                r.execute();
 
             }
         });
@@ -72,41 +84,37 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
+        Toast.makeText(this,"Iniciando registro", Toast.LENGTH_SHORT).show();
 
     }
-    public void registrarWS(){
-        try{
-            WebServiceManager.CallWebServiceOperation(this, "http","POST","Payload", "Estado");
-            try{
-                URL url=new URL("");
-                String methodType= "POST";
-                String datos= fname+","+lname+","+userName+","+password;
-                HttpURLConnection httpURLConnection= (HttpURLConnection)url.openConnection();
-                httpURLConnection.setDoOutput(true);
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.setRequestMethod(methodType);
-                httpURLConnection.getOutputStream();
-                BufferedWriter w= new BufferedWriter(new OutputStreamWriter(httpURLConnection.getOutputStream()));
-                w.write(datos);w.flush();w.close();
-                int responseCode=httpURLConnection.getResponseCode();
-                if(responseCode==HttpURLConnection.HTTP_OK){
-                    InputStream in=httpURLConnection.getInputStream();
-                    StringBuffer stringBuffer=new StringBuffer();
-                    int charIn=0;
-                    while((charIn=in.read())!=-1){
-                        stringBuffer.append((char)charIn);
-                    }
-                    String line= stringBuffer.toString();
-                }else{
-                    //local :v
-                }
+    public boolean registrarWS(){
 
-            }catch (Exception error){
+        String datos= fname+"/"+lname+"/"+userName+"/"+password;
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost post = new HttpPost("http://localhost:8080/WServices/webresources/web.user/insert");
+        //post.setHeader("content-type", "application/json");
+        try
+        {
+            //Construimos el objeto cliente en formato JSON
+            JSONObject dato = new JSONObject();
 
-            }
-        }catch (Exception e){
+            dato.put("firstName", fname);
+            dato.put("lastName", lname);
+            dato.put("email",userName);
+            dato.put("password",password);
+
+            StringEntity entity = new StringEntity(dato.toString());
+            post.setEntity(entity);
+
+            HttpResponse resp = httpClient.execute(post);
+            //resultado = EntityUtils.toString(resp.getEntity());
 
         }
+        catch(Exception ex) {
+            return false;
+        }
+
+        return true;
     }
 
 
@@ -114,6 +122,33 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
 
     @Override
     public void WebServiceMessageReceived(String userState, String message) {
+
+    }
+
+    private class consumirServicio extends AsyncTask<Void, Integer, Void>{
+        private int progreso;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            registrarWS();
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result){
+            findViewById(R.id.reg_button).setClickable(true);
+            Toast.makeText(RegistrationActivity.this,"Registro exitoso", Toast.LENGTH_SHORT).show();
+        }
+        @Override
+        protected void onPreExecute(){
+            progreso=0;
+            findViewById(R.id.reg_button).setClickable(false);
+
+        }
+        @Override
+        protected void onProgressUpdate(Integer... values){
+
+
+        }
 
     }
 }
