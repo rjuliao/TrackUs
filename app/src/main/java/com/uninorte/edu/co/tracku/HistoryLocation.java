@@ -10,6 +10,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -28,7 +29,7 @@ import java.util.List;
 public class HistoryLocation extends AppCompatActivity implements View.OnClickListener{
 
     private static final String CERO = "0";
-    private static final String BARRA = "/";
+    private static final String BARRA = "-";
     private static final String DOS_PUNTOS = ":";
 
     public final Calendar c = Calendar.getInstance();
@@ -70,6 +71,7 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
 
         ibGetDate.setOnClickListener(this);
         ibGetHour.setOnClickListener(this);
+        ((Button)findViewById(R.id.dh_btn_q)).setOnClickListener(this);
     }
 
 
@@ -119,11 +121,11 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
         Intent dh_act = new Intent();
 
         //Si fecha y hora son nulos entonces muestra un mensaje de error
-        if (dt == null && hr == null ){
+        if (dt.equals("") && hr.equals("") ){
             Toast.makeText(this,R.string.no_dh_msg,Toast.LENGTH_LONG).show();
 
             //Se escoge fecha, pero no una hora
-        }else if (dt != null && hr == null){
+        }else if (!(dt.equals("")) && hr.equals("")){
             dh_act.putExtra("callType", "Date_no_Hour");
             dh_act.putExtra("Date", dt);
             Toast.makeText(this,dt,Toast.LENGTH_LONG).show();
@@ -131,12 +133,15 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
             startActivity(dh_act);
 
             //Se escoge hora, pero no fecha
-        }else  if(dt == null && hr != null){
+        }else  if(dt.equals("") && !(hr.equals(""))){
             dh_act.putExtra("callType", "Hour_no_Date");
             dh_act.putExtra("Hour",hr);
             Toast.makeText(this,hr,Toast.LENGTH_LONG).show();
             dh_act.setClass(getApplicationContext(),DateHourLoc.class);
             startActivity(dh_act);
+
+        }else{
+            Toast.makeText(this,"KELLY PERO QUE MONDÁ",Toast.LENGTH_LONG).show();
         }
 
     }
@@ -151,7 +156,7 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
                 String dayFormat = (dayOfMonth < 10)? CERO + String.valueOf(dayOfMonth):String.valueOf(dayOfMonth);
                 String monthFormat = (mesActual < 10)? CERO + String.valueOf(mesActual):String.valueOf(mesActual);
 
-                etDate.setText(dayFormat + BARRA + monthFormat + BARRA + year);
+                etDate.setText(year + BARRA + monthFormat + BARRA + dayFormat);
 
 
             }

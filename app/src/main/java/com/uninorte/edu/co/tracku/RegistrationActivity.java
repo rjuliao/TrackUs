@@ -54,8 +54,8 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
                     intentToBeCalled.setClass(getApplicationContext(), MainMenuAct.class);
                     startActivity(intentToBeCalled);
                 }
-                consumirServicio r= new consumirServicio();
-                r.execute();
+                //consumirServicio r= new consumirServicio();
+                //r.execute();
 
             }
         });
@@ -124,6 +124,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
     public void WebServiceMessageReceived(String userState, String message) {
 
     }
+
 
     private class consumirServicio extends AsyncTask<Void, Integer, Void>{
         private int progreso;

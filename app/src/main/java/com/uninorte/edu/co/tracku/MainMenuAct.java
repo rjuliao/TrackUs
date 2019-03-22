@@ -170,9 +170,6 @@ public class MainMenuAct extends AppCompatActivity
         } else {
             finish();
         }
-
-        ((TextView) findViewById(R.id.menu_msg)).setText(
-                "Welcome" + " " + user.fname + user.lname + "!");
     }
 
     /**

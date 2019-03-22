@@ -72,8 +72,7 @@ public class OsmActivity extends AppCompatActivity
 
 
         Context ctx = getApplicationContext();
-        Configuration.getInstance().load(ctx,
-                PreferenceManager.getDefaultSharedPreferences(ctx));
+        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         map = (MapView) findViewById(R.id.oms_map);
         map.setTileSource(TileSourceFactory.MAPNIK);
 

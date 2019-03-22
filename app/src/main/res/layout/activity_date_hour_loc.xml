@@ -16,7 +16,7 @@
     <org.osmdroid.views.MapView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".OsmActivity"
+        tools:context=".DateHourLoc"
         android:id="@+id/dh_map"
         android:layout_below="@id/q_tv"
         >
