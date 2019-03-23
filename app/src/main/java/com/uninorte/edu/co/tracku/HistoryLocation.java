@@ -44,7 +44,7 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
     ImageButton ibGetDate;
     EditText etHour;
     ImageButton ibGetHour;
-
+    ListView users;
 
     /**
      *
@@ -62,6 +62,12 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_history_location);
         checkForDatabase();
 
+        users = (ListView) findViewById(R.id.users_lv);
+        final ArrayList<String> usname =  showNames();
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this,
+                android.R.layout.simple_list_item_1, usname);
+        users.setAdapter(arrayAdapter);
+
 
         etDate = (EditText) findViewById(R.id.show_date_picker);
         ibGetDate = (ImageButton) findViewById(R.id.ib_get_date);
@@ -71,10 +77,31 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
 
         ibGetDate.setOnClickListener(this);
         ibGetHour.setOnClickListener(this);
-        ((Button)findViewById(R.id.dh_btn_q)).setOnClickListener(this);
+        //((Button)findViewById(R.id.dh_btn_q)).setOnClickListener(this);
+
+        users.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
+                Toast.makeText(HistoryLocation.this, "Click succesfull "+ i +
+                        " "+ usname.get(i).toString(),Toast.LENGTH_SHORT ).show();
+            }
+        });
+
     }
 
+    /**
+     * Regresa el nombre del usuario para ponerlo en la lista
+     * @return
+     */
+    private ArrayList<String> showNames(){
+        ArrayList<String> usname = new ArrayList<>();
+        List<User> users = MainMenuAct.INSTANCE.userDao().getAllUsers(); //Obtengo todos los usuarios de la base de datos.
 
+        for (User u: users){
+            usname.add(u.fname + " "+ u.lname);
+        }
+        return usname;
+    }
 
 
     @Override
@@ -101,12 +128,8 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
             case R.id.ib_get_hour:
                 getHour();
                 break;
-            case R.id.live_btn:
-                //Inicio la actividad con las ubicaciones de todos los usarios en vivo
-                break;
-            case R.id.dh_btn_q:
-                provideDateHour();
-                break;
+
+
         }
     }
 
