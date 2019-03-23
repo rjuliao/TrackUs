@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -41,9 +42,13 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
     final int minute = c.get(Calendar.MINUTE);
 
     EditText etDate;
+    EditText etDate1;
     ImageButton ibGetDate;
+    ImageButton ibGetDate1;
     EditText etHour;
+    EditText etHour1;
     ImageButton ibGetHour;
+    ImageButton ibGetHour1;
     ListView users;
 
     /**
@@ -75,15 +80,23 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
         etHour = (EditText) findViewById(R.id.show_hour_picker);
         ibGetHour = (ImageButton) findViewById(R.id.ib_get_hour);
 
+        etDate1 = (EditText) findViewById(R.id.show_date_picker1);
+        ibGetDate1 = (ImageButton) findViewById(R.id.ib_get_date1);
+
+        etHour1 = (EditText) findViewById(R.id.show_hour_picker1);
+        ibGetHour1 = (ImageButton) findViewById(R.id.ib_get_hour1);
+
         ibGetDate.setOnClickListener(this);
         ibGetHour.setOnClickListener(this);
+        ibGetDate1.setOnClickListener(this);
+        ibGetHour1.setOnClickListener(this);
         //((Button)findViewById(R.id.dh_btn_q)).setOnClickListener(this);
 
         users.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
-                Toast.makeText(HistoryLocation.this, "Click succesfull "+ i +
-                        " "+ usname.get(i).toString(),Toast.LENGTH_SHORT ).show();
+                String[] s = usname.get(i).toString().split(". ");
+                provideDateHour(s[0]);
             }
         });
 
@@ -98,7 +111,7 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
         List<User> users = MainMenuAct.INSTANCE.userDao().getAllUsers(); //Obtengo todos los usuarios de la base de datos.
 
         for (User u: users){
-            usname.add(u.fname + " "+ u.lname);
+            usname.add(u.userId + ". " +u.fname + " "+ u.lname);
         }
         return usname;
     }
@@ -123,12 +136,17 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.ib_get_date:
-                getDate();
+                getDate(etDate);
                 break;
             case R.id.ib_get_hour:
-                getHour();
+                getHour(etHour);
                 break;
-
+            case R.id.ib_get_date1:
+                getDate(etDate1);
+                break;
+            case R.id.ib_get_hour1:
+                getHour(etHour1);
+                break;
 
         }
     }
@@ -138,40 +156,47 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
      * una hora para buscar personas en ese momento
      *
      */
-    private void provideDateHour(){
+    private void provideDateHour(String i){
         String dt = etDate.getText()+"";
         String hr = etHour.getText()+"";
+        String dt1 = etDate1.getText()+"";
+        String hr1 = etHour1.getText()+"";
+
         Intent dh_act = new Intent();
 
         //Si fecha y hora son nulos entonces muestra un mensaje de error
-        if (dt.equals("") && hr.equals("") ){
+        if (dt.equals("") && hr.equals("") && dt1.equals("") && hr1.equals("")){
             Toast.makeText(this,R.string.no_dh_msg,Toast.LENGTH_LONG).show();
 
             //Se escoge fecha, pero no una hora
-        }else if (!(dt.equals("")) && hr.equals("")){
+        }else if (!(dt.equals("")) && hr.equals("") && !(dt1.equals("")) && hr1.equals("")){
             dh_act.putExtra("callType", "Date_no_Hour");
-            dh_act.putExtra("Date", dt);
+            dh_act.putExtra("Date 1", dt);
+            dh_act.putExtra("Date 2", dt1);
+            dh_act.putExtra("id", i);
             Toast.makeText(this,dt,Toast.LENGTH_LONG).show();
             dh_act.setClass(getApplicationContext(),DateHourLoc.class);
             startActivity(dh_act);
 
             //Se escoge hora, pero no fecha
-        }else  if(dt.equals("") && !(hr.equals(""))){
+        }else  if(dt.equals("") && !(hr.equals("")) && dt1.equals("") && !(hr1.equals(""))){
             dh_act.putExtra("callType", "Hour_no_Date");
-            dh_act.putExtra("Hour",hr);
+            dh_act.putExtra("Hour 1",hr);
+            dh_act.putExtra("Hour 2", hr1);
+            dh_act.putExtra("id", i);
             Toast.makeText(this,hr,Toast.LENGTH_LONG).show();
             dh_act.setClass(getApplicationContext(),DateHourLoc.class);
             startActivity(dh_act);
 
         }else{
-            Toast.makeText(this,"KELLY PERO QUE MONDÁ",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Please, choose a date or hour!",Toast.LENGTH_LONG).show();
         }
 
     }
     /**
      * Obtengo una fecha
      */
-    private void getDate(){
+    private void getDate(final EditText e){
         DatePickerDialog recogerFecha = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -179,7 +204,7 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
                 String dayFormat = (dayOfMonth < 10)? CERO + String.valueOf(dayOfMonth):String.valueOf(dayOfMonth);
                 String monthFormat = (mesActual < 10)? CERO + String.valueOf(mesActual):String.valueOf(mesActual);
 
-                etDate.setText(year + BARRA + monthFormat + BARRA + dayFormat);
+                e.setText(year + BARRA + monthFormat + BARRA + dayFormat);
 
 
             }
@@ -192,7 +217,7 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
     /**
      * Obtengo una hora
      */
-    private void getHour(){
+    private void getHour(final EditText e){
         TimePickerDialog recogerHora = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -205,7 +230,7 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
                 } else {
                     AM_PM = "p.m.";
                 }
-                etHour.setText(hourFormat + DOS_PUNTOS + minuteFormat + " " + AM_PM);
+                e.setText(hourFormat + DOS_PUNTOS + minuteFormat + " " + AM_PM);
             }
 
         }, hour, minute, false);

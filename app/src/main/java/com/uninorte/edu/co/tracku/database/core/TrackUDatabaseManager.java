@@ -10,7 +10,7 @@ import com.uninorte.edu.co.tracku.database.entities.GPSlocation;
 import com.uninorte.edu.co.tracku.database.entities.LastLocation;
 import com.uninorte.edu.co.tracku.database.entities.User;
 
-@Database(entities = {User.class, GPSlocation.class, LastLocation.class},version = 10)
+@Database(entities = {User.class, GPSlocation.class, LastLocation.class},version = 12)
 public abstract class TrackUDatabaseManager extends RoomDatabase {
     public abstract UserDao userDao();
 
