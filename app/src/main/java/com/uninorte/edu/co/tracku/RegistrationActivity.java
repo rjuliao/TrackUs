@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedWriter;
@@ -25,12 +27,14 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 public class RegistrationActivity extends Activity implements View.OnClickListener, WebServiceManagerInterface {
     String fname = "";
     String lname = "";
-    String userName="";
-    String password="";
+    String userName = "";
+    String password = "";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,24 +42,35 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
         findViewById(R.id.reg_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intentToBeCalled=new Intent();
-                fname = ((EditText)findViewById(R.id.reg_fname_value)).getText()+"";
-                lname = ((EditText)findViewById(R.id.reg_lname_value)).getText()+"";
-                userName=((EditText)findViewById(R.id.reg_username_value)).getText()+"";
-                password=((EditText)findViewById(R.id.reg_password_value)).getText()+"";
-                String passwordConfirmation=((EditText)findViewById(R.id.reg_password_confirmation_value)).getText()+"";
+                Intent intentToBeCalled = new Intent();
+                fname = ((EditText) findViewById(R.id.reg_fname_value)).getText() + "";
+                lname = ((EditText) findViewById(R.id.reg_lname_value)).getText() + "";
+                userName = ((EditText) findViewById(R.id.reg_username_value)).getText() + "";
+                password = ((EditText) findViewById(R.id.reg_password_value)).getText() + "";
+                String passwordConfirmation = ((EditText) findViewById(R.id.reg_password_confirmation_value)).getText() + "";
 
-                if(password.equals(passwordConfirmation)) {
+                if (password.equals(passwordConfirmation)) {
                     intentToBeCalled.putExtra("callType", "userRegistration");
-                    intentToBeCalled.putExtra("fName",fname);
-                    intentToBeCalled.putExtra("lName",lname);
+                    intentToBeCalled.putExtra("fName", fname);
+                    intentToBeCalled.putExtra("lName", lname);
                     intentToBeCalled.putExtra("userName", userName);
                     intentToBeCalled.putExtra("password", password);
                     intentToBeCalled.setClass(getApplicationContext(), MainMenuAct.class);
                     startActivity(intentToBeCalled);
                 }
-                //consumirServicio r= new consumirServicio();
-                //r.execute();
+                WebServiceManager r = new WebServiceManager();
+                try {
+                    String response = r.execute("http://localhost:8080/WBServices/webresources/web.user", "GET").get();
+                    JSONArray jsonArray = new JSONArray(response);
+                    JSONObject jsonObject = jsonArray.getJSONObject(0);
+                    Toast.makeText(getApplicationContext(), "nombre " + jsonObject.getString("email"), Toast.LENGTH_LONG).show();
+                    //Log.d("firstname", "onClick: "+ jsonObject.getString("firstName"));
+                    //Log.d("lastname", "onClick: "+ jsonObject.getString("lastName"));
+                    //Log.d("userid", "onClick: "+ jsonObject.getString("userId"));
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -65,11 +80,11 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
     @Override
     protected void onResume() {
         super.onResume();
-        ((EditText)findViewById(R.id.reg_fname_value)).setText("");
-        ((EditText)findViewById(R.id.reg_lname_value)).setText("");
-        ((EditText)findViewById(R.id.reg_username_value)).setText("");
-        ((EditText)findViewById(R.id.reg_password_value)).setText("");
-        ((EditText)findViewById(R.id.reg_password_confirmation_value)).setText("");
+        ((EditText) findViewById(R.id.reg_fname_value)).setText("");
+        ((EditText) findViewById(R.id.reg_lname_value)).setText("");
+        ((EditText) findViewById(R.id.reg_username_value)).setText("");
+        ((EditText) findViewById(R.id.reg_password_value)).setText("");
+        ((EditText) findViewById(R.id.reg_password_confirmation_value)).setText("");
     }
 
     @Override
@@ -84,24 +99,24 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-        Toast.makeText(this,"Iniciando registro", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Iniciando registro", Toast.LENGTH_SHORT).show();
 
     }
-    public boolean registrarWS(){
 
-        String datos= fname+"/"+lname+"/"+userName+"/"+password;
+    public boolean registrarWS() {
+
+        String datos = fname + "/" + lname + "/" + userName + "/" + password;
         HttpClient httpClient = new DefaultHttpClient();
         HttpPost post = new HttpPost("http://localhost:8080/WServices/webresources/web.user/insert");
         //post.setHeader("content-type", "application/json");
-        try
-        {
+        try {
             //Construimos el objeto cliente en formato JSON
             JSONObject dato = new JSONObject();
 
             dato.put("firstName", fname);
             dato.put("lastName", lname);
-            dato.put("email",userName);
-            dato.put("password",password);
+            dato.put("email", userName);
+            dato.put("password", password);
 
             StringEntity entity = new StringEntity(dato.toString());
             post.setEntity(entity);
@@ -109,8 +124,7 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
             HttpResponse resp = httpClient.execute(post);
             //resultado = EntityUtils.toString(resp.getEntity());
 
-        }
-        catch(Exception ex) {
+        } catch (Exception ex) {
             return false;
         }
 
@@ -118,14 +132,12 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
     }
 
 
-
-
     @Override
     public void WebServiceMessageReceived(String userState, String message) {
 
     }
 
-
+    /*
     private class consumirServicio extends AsyncTask<Void, Integer, Void>{
         private int progreso;
 
@@ -151,5 +163,5 @@ public class RegistrationActivity extends Activity implements View.OnClickListen
 
         }
 
-    }
+    }*/
 }
