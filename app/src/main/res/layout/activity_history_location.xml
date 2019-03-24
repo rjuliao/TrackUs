@@ -23,19 +23,29 @@
 
     <EditText
         android:id="@+id/show_date_picker"
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="date"
-        android:hint="@string/format_date"
         android:layout_below="@+id/textView"
         android:layout_marginTop="10dp"
-         />
+        android:ems="10"
+        android:hint="@string/format_date"
+        android:inputType="date" />
 
+    <EditText
+        android:id="@+id/show_date_picker1"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
+        android:layout_marginLeft="17dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/ib_get_date"
+        android:ems="10"
+        android:hint="@string/format_date"
+        android:inputType="date" />
 
     <EditText
         android:id="@+id/show_hour_picker"
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/show_date_picker"
         android:layout_marginTop="10dp"
@@ -43,16 +53,34 @@
         android:hint="@string/format_hour"
         android:inputType="time" />
 
-
+    <EditText
+        android:id="@+id/show_hour_picker1"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/show_date_picker1"
+        android:layout_marginLeft="17dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/ib_get_hour"
+        android:ems="10"
+        android:hint="@string/format_hour"
+        android:inputType="time" />
 
     <ImageButton
         android:id="@+id/ib_get_date"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@mipmap/ic_acces_date"
-        android:layout_toRightOf="@+id/show_date_picker"
         android:layout_below="@+id/textView"
-        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/show_date_picker"
+        android:src="@mipmap/ic_acces_date"
+        tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:id="@+id/ib_get_date1"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/textView"
+        android:layout_toRightOf="@+id/show_date_picker1"
+        android:src="@mipmap/ic_acces_date"
         tools:ignore="ContentDescription" />
 
     <ImageButton
@@ -62,6 +90,16 @@
         android:src="@mipmap/ic_acces_time"
         android:layout_below="@+id/ib_get_date"
         android:layout_toRightOf="@id/show_hour_picker"
+        android:layout_marginTop="10dp"
+        tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:id="@+id/ib_get_hour1"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@mipmap/ic_acces_time"
+        android:layout_below="@+id/ib_get_date"
+        android:layout_toRightOf="@id/show_hour_picker1"
         android:layout_marginTop="10dp"
         tools:ignore="ContentDescription" />
 

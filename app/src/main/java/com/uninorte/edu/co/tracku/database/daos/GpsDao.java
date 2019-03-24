@@ -13,11 +13,13 @@ import java.util.List;
 @Dao
 public interface GpsDao {
 
-    @Query("SELECT * FROM gpslocation WHERE Date LIKE :date ")
-    List<GPSlocation> getUsersByDate(String date);
+    @Query("SELECT * FROM gpslocation " +
+            "WHERE UserId LIKE :id  AND Date BETWEEN :date AND :date1 ")
+    List<GPSlocation> getUsersByDate(int id, String date, String date1);
 
-    @Query("SELECT * FROM gpslocation WHERE Date LIKE :hour ")
-    List<GPSlocation> getUserByHour(String hour);
+    @Query("SELECT * FROM gpslocation " +
+            "WHERE UserId LIKE :id AND Hour BETWEEN :hour AND :hour1 ")
+    List<GPSlocation> getUserByHour(int id, String hour, String hour1);
 
     @Query("select * from gpslocation where UserId =:id")
     GPSlocation getUserById(int id);

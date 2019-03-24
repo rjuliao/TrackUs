@@ -4,6 +4,7 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.uninorte.edu.co.tracku.database.entities.GPSlocation;
@@ -52,18 +53,29 @@ public class DateHourLoc extends AppCompatActivity {
 
         String callType = getIntent().getStringExtra("callType");
         String date;
+        String date1;
         String hour;
+        String hour1;
+        int id;
         if (callType.equals("Date_no_Hour")) {
             //Obtengo fecha pero no una hora
-            date = getIntent().getStringExtra("Date");
-            ((TextView) findViewById(R.id.q_tv)).setText("User in date: " + date + "");
-            this.getUsersByDate(date);
+            date = getIntent().getStringExtra("Date 1");
+            date1 = getIntent().getStringExtra("Date 2");
+            id = Integer.parseInt(getIntent().getStringExtra("id"));
+            Log.d("ID ", "onCreate:  " + id);
+            ((TextView) findViewById(R.id.q_tv)).setText("User between date: " + date +
+                    " and " + date1);
+            this.getUsersByDate(id, date, date1);
 
         } else if (callType.equals("Hour_no_Date")) {
             //Obtengo la hora, pero no la fecha
-            hour = getIntent().getStringExtra("Hour");
-            ((TextView) findViewById(R.id.q_tv)).setText("User in date: " + hour + "");
-            this.getUsersByHour(hour);
+            hour = getIntent().getStringExtra("Hour 1");
+            hour1 = getIntent().getStringExtra("Hour 2");
+            id = Integer.parseInt(getIntent().getStringExtra("id"));
+
+            ((TextView) findViewById(R.id.q_tv)).setText("User between date: " + hour +
+                    " and "+ hour1);
+            this.getUsersByHour(id, hour, hour1);
         }
 
 
@@ -75,9 +87,10 @@ public class DateHourLoc extends AppCompatActivity {
      *
      * @param date
      */
-    private void getUsersByDate(String date) {
-        List<GPSlocation> allLoct = MainMenuAct.INSTANCE.locationDao().getUsersByDate(date);
-
+    private void getUsersByDate(int id, String date, String date1) {
+        List<GPSlocation> allLoct = MainMenuAct.INSTANCE.
+                locationDao().getUsersByDate(id, date, date1);
+        Log.d("Número de encuentros ", "getUsersByDate: " + allLoct.size());
         for (GPSlocation ul : allLoct) {
             MainMenuAct.INSTANCE.userDao().getUserById(ul.userId);//Obtengo el usuario
             this.showLocation(MainMenuAct.INSTANCE.userDao().getUserById(ul.userId),
@@ -90,8 +103,9 @@ public class DateHourLoc extends AppCompatActivity {
      *
      * @param hour
      */
-    private void getUsersByHour(String hour) {
-        List<GPSlocation> allLoct = MainMenuAct.INSTANCE.locationDao().getUserByHour(hour);
+    private void getUsersByHour(int id, String hour, String hour1) {
+        List<GPSlocation> allLoct = MainMenuAct.INSTANCE.
+                locationDao().getUserByHour(id, hour, hour1);
 
         for (GPSlocation ul : allLoct) {
             MainMenuAct.INSTANCE.userDao().getUserById(ul.userId);//Obtengo el usuario

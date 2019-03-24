@@ -26,7 +26,7 @@
     <string name="MM_msg">Welcome</string>
     <string name="back_b_inf">BACK</string>
     <string name="title_pickers">Get location by Date or Hour</string>
-    <string name="format_date">dd/mm/yyyy</string>
+    <string name="format_date">yyyy-mm-dd</string>
     <string name="format_hour">hh:mm</string>
     <string name="dh_btn">Go to find by date or Hour</string>
     <string name="live_tv">Live Locations</string>
