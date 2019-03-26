@@ -173,7 +173,7 @@ public class OsmActivity extends AppCompatActivity
         ((TextView)findViewById(R.id.lon_val)).setText(longitude +"");
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat hourFormat = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm");
 
         GPSlocation LCT = new GPSlocation();
         LCT.userId = MainMenuAct.user.userId;
@@ -183,7 +183,7 @@ public class OsmActivity extends AppCompatActivity
         LCT.hour = hourFormat.format(new Date());
         MainMenuAct.INSTANCE.locationDao().insertLocation(LCT);
 
-        this.setCenter(latitude,longitude);
+        this.setCenter(latitude,longitude, LCT.hour, LCT.date );
     }
 
     @Override
@@ -207,7 +207,7 @@ public class OsmActivity extends AppCompatActivity
      * @param latitude
      * @param longitude
      */
-    public void setCenter(double latitude, double longitude){
+    public void setCenter(double latitude, double longitude, String h, String d){
         IMapController mapController = map.getController();
         mapController.setZoom(9.5);
         GeoPoint newCenter = new GeoPoint(latitude, longitude);
@@ -216,7 +216,8 @@ public class OsmActivity extends AppCompatActivity
         Marker startMarker = new Marker(map);
         startMarker.setPosition(newCenter);
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        startMarker.setTitle("You are here "+ MainMenuAct.user.fname);
+        startMarker.setTitle(MainMenuAct.user.fname + " " + MainMenuAct.user.lname);
+        startMarker.setSubDescription("In date: " + d +" at " + h );
         map.getOverlays().add(startMarker);
     }
 

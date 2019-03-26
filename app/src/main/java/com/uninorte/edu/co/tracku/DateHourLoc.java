@@ -62,9 +62,8 @@ public class DateHourLoc extends AppCompatActivity {
             date = getIntent().getStringExtra("Date 1");
             date1 = getIntent().getStringExtra("Date 2");
             id = Integer.parseInt(getIntent().getStringExtra("id"));
-            Log.d("ID ", "onCreate:  " + id);
             ((TextView) findViewById(R.id.q_tv)).setText("User between date: " + date +
-                    " and " + date1);
+                    " and "+ date1);
             this.getUsersByDate(id, date, date1);
 
         } else if (callType.equals("Hour_no_Date")) {
@@ -90,11 +89,10 @@ public class DateHourLoc extends AppCompatActivity {
     private void getUsersByDate(int id, String date, String date1) {
         List<GPSlocation> allLoct = MainMenuAct.INSTANCE.
                 locationDao().getUsersByDate(id, date, date1);
-        Log.d("Número de encuentros ", "getUsersByDate: " + allLoct.size());
+        User u = MainMenuAct.INSTANCE.userDao().getUserById(id);
+
         for (GPSlocation ul : allLoct) {
-            MainMenuAct.INSTANCE.userDao().getUserById(ul.userId);//Obtengo el usuario
-            this.showLocation(MainMenuAct.INSTANCE.userDao().getUserById(ul.userId),
-                    ul.latitude, ul.longitude);
+            this.showLocation( u, ul.latitude, ul.longitude, ul.hour, ul.date);
         }
     }
 
@@ -106,15 +104,14 @@ public class DateHourLoc extends AppCompatActivity {
     private void getUsersByHour(int id, String hour, String hour1) {
         List<GPSlocation> allLoct = MainMenuAct.INSTANCE.
                 locationDao().getUserByHour(id, hour, hour1);
-
+        User u = MainMenuAct.INSTANCE.userDao().getUserById(id);
         for (GPSlocation ul : allLoct) {
-            MainMenuAct.INSTANCE.userDao().getUserById(ul.userId);//Obtengo el usuario
-            this.showLocation(MainMenuAct.INSTANCE.userDao().getUserById(ul.userId),
-                    ul.latitude, ul.longitude);
+
+            this.showLocation(u, ul.latitude, ul.longitude, ul.hour, ul.date);
         }
     }
 
-    private void showLocation(User user, double lat, double lon) {
+    private void showLocation(User user, double lat, double lon, String h, String d) {
 
         GeoPoint newCenter = new GeoPoint(lat, lon);
         mapController.setCenter(newCenter);
@@ -122,9 +119,9 @@ public class DateHourLoc extends AppCompatActivity {
         Marker startMarker = new Marker(map);
         startMarker.setPosition(newCenter);
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        startMarker.setTitle(user.fname + " was here");
-        startMarker.setSnippet("");
-        startMarker.setSubDescription("");
+        startMarker.setTitle(user.fname + " "+ user.lname);
+        startMarker.setSnippet("Last location");
+        startMarker.setSubDescription("In date: " + d+" at " + h );
         this.map.getOverlays().add(startMarker);
     }
 

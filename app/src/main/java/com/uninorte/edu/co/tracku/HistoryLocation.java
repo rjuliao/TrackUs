@@ -224,16 +224,17 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
                 String hourFormat =  (hourOfDay < 10)? String.valueOf(CERO + hourOfDay) : String.valueOf(hourOfDay);
                 String minuteFormat = (minute < 10)? String.valueOf(CERO + minute):String.valueOf(minute);
 
+                /*
                 String AM_PM;
                 if(hourOfDay < 12) {
                     AM_PM = "a.m.";
                 } else {
                     AM_PM = "p.m.";
-                }
-                e.setText(hourFormat + DOS_PUNTOS + minuteFormat + " " + AM_PM);
+                }*/
+                e.setText(hourFormat + DOS_PUNTOS + minuteFormat);
             }
 
-        }, hour, minute, false);
+        }, hour, minute, true);
 
         recogerHora.show();
     }

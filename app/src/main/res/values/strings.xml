@@ -21,17 +21,17 @@
     <string name="bt_center_map_description">Center map</string>
     <string name="lat_v">LATITUDE: </string>
     <string name="lon_v">LONGITUDE: </string>
-    <string name="MM_b1">Your Location</string>
+    <string name="MM_b1">Live Location</string>
     <string name="MM_b2">History</string>
     <string name="MM_msg">Welcome</string>
     <string name="back_b_inf">BACK</string>
     <string name="title_pickers">Get location by Date or Hour</string>
-    <string name="format_date">yyyy-mm-dd</string>
-    <string name="format_hour">hh:mm</string>
-    <string name="dh_btn">Go to find by date or Hour</string>
-    <string name="live_tv">Live Locations</string>
-    <string name="live_msg">Go to Live</string>
-    <string name="no_dh_msg">Please, choose a date and/or hour</string>
+    <string name="format_date" translatable="false">yyyy-mm-dd</string>
+    <string name="format_hour" translatable="false">hh:mm</string>
+    <string name="dh_btn" translatable="false">Go to find by date or Hour</string>
+    <string name="live_tv" translatable="false">Live Locations</string>
+    <string name="live_msg" translatable="false">Go to Live</string>
+    <string name="no_dh_msg" translatable="false">Please, choose a date and/or hour</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 </resources>

@@ -22,4 +22,9 @@
     <string name="bt_center_map_description">Center mal</string>
     <string name="lat_v">"LATITUDE: "</string>
     <string name="lon_v">LONGITUDE</string>
+    <string name="MM_b1">Live Location</string>
+    <string name="MM_b2">History</string>
+    <string name="MM_msg">Welcome</string>
+    <string name="back_b_inf">BACK</string>
+    <string name="title_pickers">Get Location by Date or Hour</string>
 </resources>
