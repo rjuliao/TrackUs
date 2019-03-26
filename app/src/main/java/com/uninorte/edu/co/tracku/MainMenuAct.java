@@ -17,13 +17,18 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
 import com.uninorte.edu.co.tracku.com.uninorte.edu.co.tracku.gps.GPSManager;
 import com.uninorte.edu.co.tracku.com.uninorte.edu.co.tracku.gps.GPSManagerInterface;
 import com.uninorte.edu.co.tracku.database.core.TrackUDatabaseManager;
 import com.uninorte.edu.co.tracku.database.entities.GPSlocation;
 import com.uninorte.edu.co.tracku.database.entities.User;
+import com.uninorte.edu.co.tracku.networking.VolleyS;
+import com.uninorte.edu.co.tracku.networking.WebServiceManager;
 import com.uninorte.edu.co.tracku.networking.WebServiceManagerInterface;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osmdroid.config.Configuration;
 
 import java.security.MessageDigest;
@@ -39,7 +44,8 @@ public class MainMenuAct extends AppCompatActivity
     GPSManager gpsManager;
     double latitude;
     double longitude;
-
+    VolleyS volley;
+    RequestQueue fRequestQ;
     static TrackUDatabaseManager INSTANCE;
     static User user;
 
@@ -141,12 +147,13 @@ public class MainMenuAct extends AppCompatActivity
         checkPermissions();
         getDatabase(this);
 
-
         String callType = getIntent().getStringExtra("callType");
         if (callType.equals("userLogin")) {
             String userName = getIntent().getStringExtra("userName");
             String password = getIntent().getStringExtra("password");
-
+            WebServiceManager.CallWebServiceOperation(this,
+                    "http://192.168.1.5:8080/WebServices/webresources/web.user/login/"+userName
+            +"/"+password,"Login",getApplicationContext());
             if (!userAuth(userName, password)) {
                 Toast.makeText(this, "User not found!", Toast.LENGTH_LONG).show();
                 finish();
@@ -160,6 +167,10 @@ public class MainMenuAct extends AppCompatActivity
             String lsname = getIntent().getStringExtra("lName");
             String userName = getIntent().getStringExtra("userName");
             String password = getIntent().getStringExtra("password");
+            WebServiceManager.CallWebServiceOperation(this,
+                    "http://192.168.1.5:8080/WebServices/webresources/web.user/insert/"
+                            +fsname +"/"+lsname+"/"+userName +"/"+password,
+                    "Registro",getApplicationContext());
 
             if (!userRegistration(fsname, lsname, userName, password)) {
                 Toast.makeText(this, "Error while registering user!", Toast.LENGTH_LONG).show();
@@ -263,15 +274,6 @@ public class MainMenuAct extends AppCompatActivity
 
     }
 
-    @Override
-    public void WebServiceMessageReceived(String userState, final String message) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplication(), message, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     public void pressMyLocation(View view) {
 
@@ -286,5 +288,25 @@ public class MainMenuAct extends AppCompatActivity
         Intent intent = new Intent();
         intent.setClass(getApplicationContext(), HistoryLocation.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void WebServiceMessageReceived(String userState, String message) {
+
+    }
+    @Override
+    public void WebServiceMessageReceived(String userState, final JSONObject message) {
+        //Login
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplication(),""+message,Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void WebServiceMessageReceived(String userState, JSONArray message) {
+
     }
 }

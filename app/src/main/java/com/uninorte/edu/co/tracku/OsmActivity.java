@@ -24,8 +24,11 @@ import com.uninorte.edu.co.tracku.com.uninorte.edu.co.tracku.gps.GPSManagerInter
 import com.uninorte.edu.co.tracku.database.core.TrackUDatabaseManager;
 import com.uninorte.edu.co.tracku.database.entities.GPSlocation;
 import com.uninorte.edu.co.tracku.database.entities.User;
+import com.uninorte.edu.co.tracku.networking.BaseVolleyFragment;
 import com.uninorte.edu.co.tracku.networking.WebServiceManagerInterface;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -191,15 +194,6 @@ public class OsmActivity extends AppCompatActivity
 
     }
 
-    @Override
-    public void WebServiceMessageReceived(String userState, final String message) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplication(),message,Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
 
     /**
@@ -228,5 +222,19 @@ public class OsmActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void WebServiceMessageReceived(String userState, String message) {
+
+    }
+    @Override
+    public void WebServiceMessageReceived(String userState, JSONObject message) {
+
+    }
+
+    @Override
+    public void WebServiceMessageReceived(String userState, JSONArray message) {
+
     }
 }
