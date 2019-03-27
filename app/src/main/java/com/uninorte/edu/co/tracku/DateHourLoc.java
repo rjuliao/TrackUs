@@ -1,6 +1,7 @@
 package com.uninorte.edu.co.tracku;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -87,13 +88,21 @@ public class DateHourLoc extends AppCompatActivity {
      * @param date
      */
     private void getUsersByDate(int id, String date, String date1) {
-        List<GPSlocation> allLoct = MainMenuAct.INSTANCE.
+        /*
+        if(conexión con el WS existe){
+            List <- con la información que arroja el query por fecha en el WS
+        }else{
+            List <- con la información que arroja el query por fecha en locar
+
+            List<GPSlocation> allLoct = MainMenuAct.INSTANCE.
                 locationDao().getUsersByDate(id, date, date1);
-        User u = MainMenuAct.INSTANCE.userDao().getUserById(id);
+            User u = MainMenuAct.INSTANCE.userDao().getUserById(id);
+        }
 
         for (GPSlocation ul : allLoct) {
             this.showLocation( u, ul.latitude, ul.longitude, ul.hour, ul.date);
         }
+        */
     }
 
     /**
@@ -102,13 +111,25 @@ public class DateHourLoc extends AppCompatActivity {
      * @param hour
      */
     private void getUsersByHour(int id, String hour, String hour1) {
-        List<GPSlocation> allLoct = MainMenuAct.INSTANCE.
+
+        /*
+        if (conexión con el WS existosa){
+
+            List <- con la información que arroja el query por hora en el WS
+        }else{
+            List <- con la información que arroja el query por hora en local
+                    List<GPSlocation> allLoct = MainMenuAct.INSTANCE.
                 locationDao().getUserByHour(id, hour, hour1);
-        User u = MainMenuAct.INSTANCE.userDao().getUserById(id);
+            User u = MainMenuAct.INSTANCE.userDao().getUserById(id);
+        }
         for (GPSlocation ul : allLoct) {
 
             this.showLocation(u, ul.latitude, ul.longitude, ul.hour, ul.date);
         }
+
+         */
+
+
     }
 
     private void showLocation(User user, double lat, double lon, String h, String d) {
@@ -120,6 +141,7 @@ public class DateHourLoc extends AppCompatActivity {
         startMarker.setPosition(newCenter);
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         startMarker.setTitle(user.fname + " "+ user.lname);
+        startMarker.setTextLabelBackgroundColor(Color.parseColor("3B83BD"));
         startMarker.setSnippet("Last location");
         startMarker.setSubDescription("In date: " + d+" at " + h );
         this.map.getOverlays().add(startMarker);

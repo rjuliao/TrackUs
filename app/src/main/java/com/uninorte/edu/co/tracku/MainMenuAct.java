@@ -160,7 +160,7 @@ public class MainMenuAct extends AppCompatActivity
                 Toast.makeText(this, "User not found!", Toast.LENGTH_LONG).show();
                 finish();
             } else {
-                Toast.makeText(this, "Welcome! ", Toast.LENGTH_LONG).show();
+                 Toast.makeText(this, "Welcome! ", Toast.LENGTH_LONG).show();
             }
 
 
@@ -316,5 +316,15 @@ public class MainMenuAct extends AppCompatActivity
     @Override
     public void WebServiceMessageReceived(String userState, JSONArray message) {
 
+    }
+
+    /**
+     * Cierrlo sesión poniento user y la instancia de room en null y regresando al login
+     * @param view
+     */
+    public void sing_out(View view) {
+        user = null;
+        INSTANCE = null;
+        finish();
     }
 }

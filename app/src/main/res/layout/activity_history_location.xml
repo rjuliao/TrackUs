@@ -29,7 +29,8 @@
         android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="@string/format_date"
-        android:inputType="date" />
+        android:inputType="date"
+        android:enabled="false"/>
 
     <EditText
         android:id="@+id/show_date_picker1"
@@ -41,7 +42,8 @@
         android:layout_toRightOf="@+id/ib_get_date"
         android:ems="10"
         android:hint="@string/format_date"
-        android:inputType="date" />
+        android:inputType="date"
+        android:enabled="false"/>
 
     <EditText
         android:id="@+id/show_hour_picker"
@@ -51,7 +53,8 @@
         android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="@string/format_hour"
-        android:inputType="time" />
+        android:inputType="time"
+        android:enabled="false"/>
 
     <EditText
         android:id="@+id/show_hour_picker1"
@@ -63,7 +66,8 @@
         android:layout_toRightOf="@+id/ib_get_hour"
         android:ems="10"
         android:hint="@string/format_hour"
-        android:inputType="time" />
+        android:inputType="time"
+        android:enabled="false"/>
 
     <ImageButton
         android:id="@+id/ib_get_date"

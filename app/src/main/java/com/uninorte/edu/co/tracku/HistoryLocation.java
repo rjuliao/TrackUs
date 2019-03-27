@@ -190,6 +190,10 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
 
         }else{
             Toast.makeText(this,"Please, choose a date or hour!",Toast.LENGTH_LONG).show();
+            etDate.setText("");
+            etDate1.setText("");
+            etHour.setText("");
+            etHour1.setText("");
         }
 
     }

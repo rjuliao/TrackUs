@@ -24,6 +24,14 @@ public interface GpsDao {
     @Query("select * from gpslocation where UserId =:id")
     GPSlocation getUserById(int id);
 
+    /**
+     * Regresa todos los usuarios en la base de datos local que no tienen
+     * la localización sincronizada en el WS
+     * @param sync
+     */
+    @Query("SELECT * FROM gpslocation WHERE Sincronizar LIKE :sync")
+    List<GPSlocation> syncWS(boolean sync);
+
     @Insert
     void insertLocation(GPSlocation loc);
 

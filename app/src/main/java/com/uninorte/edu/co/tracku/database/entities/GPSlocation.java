@@ -25,4 +25,12 @@ public class GPSlocation {
 
     @ColumnInfo(name = "Hour")
     public String hour;
+
+    /**
+     * Variable que es falsa si el usuario no esta conectado al WS
+     * y es verdadera cuando se sube al WS
+     */
+    @ColumnInfo(name = "Sincronizar")
+    public boolean sync;
+
 }

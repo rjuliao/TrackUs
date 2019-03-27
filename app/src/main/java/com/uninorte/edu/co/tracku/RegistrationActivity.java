@@ -27,7 +27,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class RegistrationActivity extends Activity implements View.OnClickListener, WebServiceManagerInterface {
+public class RegistrationActivity extends Activity
+        implements View.OnClickListener, WebServiceManagerInterface {
     String fname = "";
     String lname = "";
     String userName="";
