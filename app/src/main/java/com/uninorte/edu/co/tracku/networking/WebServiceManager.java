@@ -1,57 +1,101 @@
 package com.uninorte.edu.co.tracku.networking;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.Toast;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.uninorte.edu.co.tracku.MainMenuAct;
+
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 
-public class WebServiceManager extends AsyncTask<String, String, String> {
+public class WebServiceManager {
+    private static RequestQueue mRequestQueue;
 
-    /**
-     * Override this method to perform a computation on a background thread. The
-     * specified parameters are the parameters passed to {@link #execute}
-     * by the caller of this task.
-     * <p>
-     * This method can call {@link #publishProgress} to publish updates
-     * on the UI thread.
-     *
-     * @param strings The parameters of the task.
-     * @return A result, defined by the subclass of this task.
-     * @see #onPreExecute()
-     * @see #onPostExecute
-     * @see #publishProgress
-     */
-    @Override
-    protected String doInBackground(String... strings) {
-        try {
-            URL url = new URL(strings[0]);
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            httpURLConnection.setRequestMethod(strings[1]);
-            //httpURLConnection.getOutputStream().write(payload.getBytes());
-            int responseCode = httpURLConnection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                InputStream in = new BufferedInputStream(httpURLConnection.getInputStream());
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                String line;
-                StringBuffer stringBuffer = new StringBuffer();
-                while ((line = reader.readLine()) != null) {
-                    stringBuffer.append(line);
-                }
-                return stringBuffer.toString();
-            } else {
-                //local :v
+    public static void CallWebServiceOperation(final WebServiceManagerInterface caller,
+                                               final String  webServiceURL,
+                                               final String userState, final Context context){
+
+        try{
+            mRequestQueue= Volley.newRequestQueue(context);
+            switch (userState){
+                case "Registro"://get
+                    requestJSONObject(caller,webServiceURL,context,userState,0);
+                    break;
+                case "Login"://get
+                    requestJSONObject(caller,webServiceURL,context,userState,0);
+                    break;
+                case "Live"://get
+                    requestJSONArrayObject(caller,webServiceURL,context,userState,0);
+                    break;
+                case "History"://get
+                    requestJSONArrayObject(caller,webServiceURL,context,userState,0);
+                    break;
+                case "SaveLocation"://get
+                    requestJSONObject(caller,webServiceURL,context,userState,0);
+                    break;
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        }catch (Exception error){
+
         }
-        return null;
     }
+
+    public static void requestJSONObject(final WebServiceManagerInterface caller, String webServiceUrl,
+                                         final Context context, final String userstate, int methodType){
+
+        JsonObjectRequest request= new JsonObjectRequest(methodType,webServiceUrl,
+                null,new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                caller.WebServiceMessageReceived(userstate,response);
+                Log.i("Json",""+response.toString());
+                MainMenuAct.connection=1;
+            }
+
+        }, new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("ErrorRaul",""+error);
+            }
+        });
+        mRequestQueue.add(request);
+        System.out.println("C:");
+    }
+    public static void requestJSONArrayObject(final WebServiceManagerInterface caller, String webServiceUrl
+            , final Context context, final String userstate, int methodType){
+
+        JsonArrayRequest request= new JsonArrayRequest(methodType,
+                webServiceUrl, null,new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                caller.WebServiceMessageReceived(userstate,response);
+            }
+        }, new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "Error:"+error, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        mRequestQueue.add(request);
+
+    }
+
+
 }

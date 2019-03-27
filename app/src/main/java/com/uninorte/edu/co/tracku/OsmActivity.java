@@ -24,8 +24,11 @@ import com.uninorte.edu.co.tracku.com.uninorte.edu.co.tracku.gps.GPSManagerInter
 import com.uninorte.edu.co.tracku.database.core.TrackUDatabaseManager;
 import com.uninorte.edu.co.tracku.database.entities.GPSlocation;
 import com.uninorte.edu.co.tracku.database.entities.User;
+import com.uninorte.edu.co.tracku.networking.WebServiceManager;
 import com.uninorte.edu.co.tracku.networking.WebServiceManagerInterface;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -73,7 +76,7 @@ public class OsmActivity extends AppCompatActivity
 
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
-        map = (MapView) findViewById(R.id.oms_map);
+        map = findViewById(R.id.oms_map);
         map.setTileSource(TileSourceFactory.MAPNIK);
 
     }
@@ -181,6 +184,10 @@ public class OsmActivity extends AppCompatActivity
         LCT.longitude = longitude;
         LCT.date = dateFormat.format(new Date());
         LCT.hour = hourFormat.format(new Date());
+        WebServiceManager.CallWebServiceOperation(this,
+                "http://10.20.16.80:8080/WebServices/webresources/web.gpslocation/insert/"
+                        +MainMenuAct.user.userId +"/"+latitude+"/"+longitude +"/"+ dateFormat.format(new Date())
+                +"/"+ hourFormat.format(new Date()), "SaveLocation",getApplicationContext());
         MainMenuAct.INSTANCE.locationDao().insertLocation(LCT);
 
         this.setCenter(latitude,longitude, LCT.hour, LCT.date );
@@ -191,15 +198,6 @@ public class OsmActivity extends AppCompatActivity
 
     }
 
-    @Override
-    public void WebServiceMessageReceived(String userState, final String message) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplication(),message,Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
 
     /**
@@ -229,5 +227,19 @@ public class OsmActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void WebServiceMessageReceived(String userState, String message) {
+
+    }
+    @Override
+    public void WebServiceMessageReceived(String userState, JSONObject message) {
+
+    }
+
+    @Override
+    public void WebServiceMessageReceived(String userState, JSONArray message) {
+
     }
 }

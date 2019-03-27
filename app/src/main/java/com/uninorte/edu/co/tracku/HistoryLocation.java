@@ -67,24 +67,24 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_history_location);
         checkForDatabase();
 
-        users = (ListView) findViewById(R.id.users_lv);
+        users = findViewById(R.id.users_lv);
         final ArrayList<String> usname =  showNames();
         ArrayAdapter arrayAdapter = new ArrayAdapter(this,
                 android.R.layout.simple_list_item_1, usname);
         users.setAdapter(arrayAdapter);
 
 
-        etDate = (EditText) findViewById(R.id.show_date_picker);
-        ibGetDate = (ImageButton) findViewById(R.id.ib_get_date);
+        etDate = findViewById(R.id.show_date_picker);
+        ibGetDate = findViewById(R.id.ib_get_date);
 
-        etHour = (EditText) findViewById(R.id.show_hour_picker);
-        ibGetHour = (ImageButton) findViewById(R.id.ib_get_hour);
+        etHour = findViewById(R.id.show_hour_picker);
+        ibGetHour = findViewById(R.id.ib_get_hour);
 
-        etDate1 = (EditText) findViewById(R.id.show_date_picker1);
-        ibGetDate1 = (ImageButton) findViewById(R.id.ib_get_date1);
+        etDate1 = findViewById(R.id.show_date_picker1);
+        ibGetDate1 = findViewById(R.id.ib_get_date1);
 
-        etHour1 = (EditText) findViewById(R.id.show_hour_picker1);
-        ibGetHour1 = (ImageButton) findViewById(R.id.ib_get_hour1);
+        etHour1 = findViewById(R.id.show_hour_picker1);
+        ibGetHour1 = findViewById(R.id.ib_get_hour1);
 
         ibGetDate.setOnClickListener(this);
         ibGetHour.setOnClickListener(this);
@@ -95,7 +95,7 @@ public class HistoryLocation extends AppCompatActivity implements View.OnClickLi
         users.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
-                String[] s = usname.get(i).toString().split(". ");
+                String[] s = usname.get(i).split(". ");
                 provideDateHour(s[0]);
             }
         });

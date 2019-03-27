@@ -42,7 +42,7 @@ public class DateHourLoc extends AppCompatActivity {
 
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
-        map = (MapView) findViewById(R.id.dh_map);
+        map = findViewById(R.id.dh_map);
         map.setTileSource(TileSourceFactory.MAPNIK);
         mapController = map.getController();
         mapController.setZoom(9.5);

@@ -87,7 +87,7 @@ public class OmsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if(map==null) {
-            map = (MapView) (this.getActivity()).findViewById(R.id.oms_map);
+            map = (this.getActivity()).findViewById(R.id.oms_map);
             if (map != null) {
                 map.setTileSource(TileSourceFactory.MAPNIK);
                 map.onResume();
